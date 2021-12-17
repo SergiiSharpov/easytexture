@@ -13,6 +13,7 @@ import TouchRipple from '@mui/material/ButtonBase/TouchRipple';
 import ButtonBase from '@mui/material/ButtonBase';
 
 import { createTheme, ThemeProvider } from '@mui/material';
+import Preview from './Preview';
 
 
 const darkTheme = createTheme({
@@ -43,7 +44,9 @@ function App() {
             <MapList/>
           </Box>
           <Container disableGutters={true} sx={{ display: 'flex' }} maxWidth={false} className='workflow-container'>
-            <Box sx={{width: '100%', flexGrow: 0, flexShrink: 0}} className='preview-container'>Preview</Box>
+            <Box sx={{width: '100%', flexGrow: 0, flexShrink: 0}} className='preview-container'>
+              <Preview/>
+            </Box>
             <Box sx={{width: '100%'}} className='main-container'>
               <Flow/>
             </Box>
