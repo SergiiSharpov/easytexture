@@ -82,7 +82,58 @@ body {
 }
 
 .map-item.Mui-selected {
-  background-color: #42a5f5!important;
+  background-color: #2196f3!important;
 }
+
+
+.node-base {
+  min-width: 160px;
+  box-sizing: border-box;
+
+  background: transparent;
+  color: #fff;
+  border-radius: 3px;
+  border-style: solid;
+  border-width: 1px!important;
+  border-color: #1a192b;
+  
+  /* border: 1px solid #777; */
+
+  box-shadow: 0 1px 4px 1px rgb(0 0 0 / 8%);
+
+  font-family: "Roboto","Helvetica","Arial",sans-serif;
+  font-weight: 400;
+  font-size: 12px;
+}
+
+.node-base__input {
+  border-color: #2196f3;
+  box-shadow: 0 0 4px 0px #2196f3;
+}
+
+.node-base__output {
+  border-color: #e91e63;
+  box-shadow: 0 0 4px 0px #e91e63;
+}
+
+.node-base__content {
+  position: relative;
+  padding: 10px;
+  background-color: #000000;
+
+  border-bottom-left-radius: 3px;
+  border-bottom-right-radius: 3px;
+}
+
+.node-base__header {
+  text-align: center;
+  border-bottom: 1px solid #343434;
+  background-color: #121212;
+
+  border-top-left-radius: 3px;
+  border-top-right-radius: 3px;
+}
+
+/* text-align: right; */
 
 
