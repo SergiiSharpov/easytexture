@@ -41,8 +41,9 @@ const FragmentAfterMainShader = (`
 
 
 class ShaderGraph {
+  inputNodes = {};
   constructor() {
-    this.inputNodes = {};
+    // this.inputNodes = {};
     this.nodes = {};
     this.dependencies = [];
     this.outNode = null;

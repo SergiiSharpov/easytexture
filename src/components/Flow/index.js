@@ -1,6 +1,24 @@
-import React, { useCallback, useState } from 'react';
-import ReactFlow, { Controls, Handle } from 'react-flow-renderer';
-import { Vector3 } from 'three';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import ReactFlow, { Controls, useZoomPanHelper } from 'react-flow-renderer';
+import { observer } from 'mobx-react';
+import { Vector2 } from 'three';
+
+import Paper from '@mui/material/Paper';
+
+import Accordion from '@mui/material/Accordion';
+import AccordionDetails from '@mui/material/AccordionDetails';
+import AccordionSummary from '@mui/material/AccordionSummary';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+
+import List from '@mui/material/List';
+import ListItem from '@mui/material/ListItem';
+import ListItemButton from '@mui/material/ListItemButton';
+import ListItemIcon from '@mui/material/ListItemIcon';
+import ListItemText from '@mui/material/ListItemText';
+
+
+// Just to make nodes registred
+require('./nodes');
 
 // you need these styles for React Flow to work properly
 import 'react-flow-renderer/dist/style.css';
@@ -10,103 +28,116 @@ import 'react-flow-renderer/dist/style.css';
  
 
 import bgImage from './../../assets/images/prototype/dark/texture_08.png'
-import BaseNode from './nodes/core/node';
-import Vec3Node from './nodes/math/vec3';
 import compile from '../../shadergen';
 import simpleShaderMaterial from '../../store/simpleShaderMaterial';
-//console.log(bgImage)
-//document.body.style.backgroundImage = `url(${bgImage})`;
+import { NodeGroups, TypedComponents } from '../../store/tree/core/tree';
+import { ClickAwayListener } from '@mui/material';
 
-const elements = [
-  { id: '1', type: 'vec3', data: { label: 'vector01', value: new Vector3() }, position: { x: 100, y: 0 }, targetPosition: 'left', sourcePosition: 'right' },
-  { id: '2', type: 'vec3', data: { label: 'vector02', value: new Vector3(0, 0.5, 0.25) }, position: { x: 100, y: 300 }, targetPosition: 'left', sourcePosition: 'right' },
-  // you can also pass a React Node as a label
-  { id: '3', type: 'sum', data: { label: "sum01" }, position: { x: 450, y: 200 }, targetPosition: 'left', sourcePosition: 'right' },
 
-  { id: '4', type: 'out', data: { label: 'Out' }, position: { x: 750, y: 200 }, targetPosition: 'left', sourcePosition: 'right' },
-  
-  // { id: 'e1-2', source: '1', sourceHandle: 'a', target: '2', targetHandle: 'a', animated: true },
-  { id: 'e1-3', source: '1', sourceHandle: 'a', target: '3', targetHandle: 'a', animated: false },
-  { id: 'e2-3', source: '2', sourceHandle: 'a', target: '3', targetHandle: 'b', animated: false },
-  { id: 'e3-4', source: '3', sourceHandle: 'a', target: '4', targetHandle: 'a', animated: false },
-];
+// compile(elements, simpleShaderMaterial);
 
-const InputLabelComponent = ({id, label}) => {
+const PaneContextGroup = ({group, name, onCreate}) => {
+  // const onCreateCallback = useCallback(() => {
+
+  // }, []);
+
   return (
-    <div className='node-base__content'>
-      <Handle type="target" position="left" id={id} />
-      <div className='node-base__content__title' style={{textAlign: 'left'}}>{label}</div>
-    </div>
+    <Accordion
+      disableGutters={true}
+      square={true}
+    >
+      <AccordionSummary
+        expandIcon={<ExpandMoreIcon />}
+        aria-controls="panel1a-content"
+        id="panel1a-header"
+      >
+        <div>{name}</div>
+      </AccordionSummary>
+      <AccordionDetails>
+        <List>
+          {
+            group.map(({name, type}) => (
+              <ListItem
+                disablePadding
+                key={type}
+                onClick={() => onCreate(type)}
+              >
+                <ListItemButton>
+                  <ListItemText primary={name} />
+                </ListItemButton>
+              </ListItem>
+            ))
+          }
+        </List>
+      </AccordionDetails>
+    </Accordion>
   )
 }
 
-const OutputLabelComponent = ({id, label}) => {
+const PaneContextMenu = ({onClose, event = null, tree}) => {
+  const ref = useRef(null);
+  const positionRef = useRef({x: -999999, y: -999999});
+
+  const {project} = useZoomPanHelper();
+
+  useEffect(() => {
+    if (event) {
+      let top = event.nativeEvent.offsetY;
+      let left = event.nativeEvent.offsetX;
+
+      positionRef.current.x = left;
+      positionRef.current.y = top;
+
+      top = Math.min(top, event.target.offsetHeight - ref.current.offsetHeight);
+      left = Math.min(left, event.target.offsetWidth - ref.current.offsetWidth);
+
+      ref.current.style.top = `${top}px`;
+      ref.current.style.left = `${left}px`;
+    }
+  }, [event]);
+
+  const onCreate = useCallback((type) => {
+    // console.log(project(positionRef.current));
+    // console.log(type, event.target);
+    let pos = project(positionRef.current);
+    tree.createNode(type, new Vector2(pos.x, pos.y));
+
+    onClose();
+  }, [event, project, tree, onClose]);
+
+  if (!event) {
+    return null;
+  }
+
   return (
-    <div className='node-base__content'>
-      <Handle type="source" position="right" id={id} />
-      <div className='node-base__content__title' style={{textAlign: 'right'}}>{label}</div>
-    </div>
+    <ClickAwayListener onClickAway={onClose}>
+      <Paper
+        // elevation={3}
+        variant="outlined"
+        square
+        className='context-menu'
+        style={{
+          // top, left,
+          maxWidth: 240,
+          width: 240
+        }}
+        ref={ref}
+      >
+        {/* <Typography sx={{ p: 2 }}>The content of the Popover.</Typography> */}
+        {Object.keys(NodeGroups).map(name => <PaneContextGroup key={name} group={NodeGroups[name]} name={name} onCreate={onCreate} />)}
+      </Paper>
+    </ClickAwayListener>
   )
 }
 
-const HeaderNodeComponent = ({children}) => {
-  return (
-    <div className='node-base__header'>
-      {children}
-    </div>
-  )
-}
-
-const InputNode = ({children, data}) => {
-  return (
-    <div className='node-base node-base__input'>
-      <HeaderNodeComponent>Title</HeaderNodeComponent>
-      <OutputLabelComponent id="a" label={data.label} />
-      {children}
-    </div>
-  )
-}
-
-const OutputNode = ({children, data}) => {
-  return (
-    <BaseNode title='Result color' type='output' >
-      <InputLabelComponent id="a" label={data.label} />
-      {children}
-    </BaseNode>
-  )
-}
-
-const BaseNodeNext = ({children, data}) => {
-  return (
-    <BaseNode title='Sum' >
-      <OutputLabelComponent id="a" label='Out' />
-      <InputLabelComponent id="a" label='In 1' />
-      <InputLabelComponent id="b" label='In 2' />
-      {children}
-    </BaseNode>
-  )
-}
-
-
-const CustomNodeComponent = ({ data }) => {
-  return (
-    <div className='node-base'>
-      <OutputLabelComponent id="a" label={data.label} />
-      <InputLabelComponent id="a" label={data.label} />
-    </div>
-  );
-};
-
-const nodeTypes = {
-  vec3: Vec3Node,
-  out: OutputNode,
-  sum: BaseNodeNext
-};
-
-compile(elements, simpleShaderMaterial);
-
-const Flow = () => {
+const Flow = observer(({tree}) => {
   const [rfInstance, setRfInstance] = useState(null);
+
+  const [paneContextEvent, setPaneContextEvent] = useState(null);
+
+  const onPaneContextClose = useCallback(() => {
+    setPaneContextEvent(null);
+  }, []);
   // const onConnect = (params) => setElements((els) => addEdge(params, els));
 
   const onLoad = useCallback((instance) => {
@@ -119,19 +150,35 @@ const Flow = () => {
     // console.log('zoomIn', e, zoom, props);
   }, [rfInstance])
 
+  const onPaneContextMenu = useCallback((e) => {
+    // setListPos({top: e.nativeEvent.offsetY, left: e.nativeEvent.offsetX});
+    setPaneContextEvent(e);
+  }, []);
+
   return (
     <div
       className='flow-container'
       style={{backgroundImage: `url(${bgImage})`}}
     >
-      <ReactFlow elements={elements} nodeTypes={nodeTypes} onLoad={onLoad}>
+      <ReactFlow
+        elements={tree.flat}
+        nodeTypes={TypedComponents}
+        onLoad={onLoad}
+        onConnect={tree.onConnect}
+
+        onEdgeUpdate={console.log}
+        onEdgeUpdateEnd={console.log}
+        onPaneContextMenu={onPaneContextMenu}
+      >
         <Controls
           onZoomIn={onZoom}
           onZoomOut={onZoom}
         />
+        <PaneContextMenu onClose={onPaneContextClose} event={paneContextEvent} tree={tree} />
       </ReactFlow>
+      
     </div>
   );
-};
+});
 
 export default Flow;

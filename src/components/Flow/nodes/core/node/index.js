@@ -10,7 +10,10 @@ const HeaderNodeComponent = ({children, closed, onClose}) => {
   return (
     <div className='node-base__header'>
       <div className='node-base__header__title'>{children}</div>
-      <div className={className}>
+      <div
+        className={className}
+        onMouseDown={e => e.stopPropagation()}
+      >
         <div onClick={() => onClose(!closed)}><span/></div>
       </div>
     </div>
