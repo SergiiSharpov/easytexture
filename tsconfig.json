@@ -1,0 +1,36 @@
+{
+  "compilerOptions": {
+    "target": "ES2020",
+    "allowSyntheticDefaultImports": true,
+    "checkJs": false,
+    "allowJs": true,
+    "noEmit": true,
+    "baseUrl": ".",
+    "moduleResolution": "node",
+    "strict": true,
+    "strictNullChecks": true,
+    "noImplicitAny": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noImplicitReturns": true,
+    "noImplicitThis": true,
+    "noFallthroughCasesInSwitch": true,
+    "jsx": "react",
+    "module": "commonjs",
+    "alwaysStrict": true,
+    "forceConsistentCasingInFileNames": true,
+    "esModuleInterop": true,
+    "noErrorTruncation": true,
+    "removeComments": true,
+    "resolveJsonModule": true,
+    "lib": ["ES2020", "dom", "DOM.Iterable", "ScriptHost"],
+    "paths": {
+    },
+    "watch": true
+  },
+  "include": ["src/**/*","tsconfig.d.ts"],
+  "exclude": [
+    "node_modules",
+    "docs"
+    ]
+}
