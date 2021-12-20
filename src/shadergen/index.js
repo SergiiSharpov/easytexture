@@ -1,19 +1,7 @@
-
-// class IDCounter {
-//   constructor() {
-//     this.id = 0;
-//   }
-
+import crc32 from 'crc-32';
 import { getBaseMaterial } from "../utils/simpleShaderMaterial";
 
-//   get next() {
-//     return this.id++;
-//   }
 
-//   reset() {
-//     this.id = 0;
-//   }
-// }
 
 Set.prototype.get = function(idx){
   if(typeof idx !== 'number') throw new TypeError(`Argument idx must be a Number. Got [${idx}]`);
@@ -70,12 +58,6 @@ export class ShaderGraph {
       return false;
     }
 
-    // switch (node.constructor.type) {
-    //   case 'vec3':
-    //     this.inputNodes[node.id] = node;
-    //   break;
-    // }
-
     this.nodes[node.id] = node;
 
     this._processed[node.id] = {
@@ -131,8 +113,6 @@ export class ShaderGraph {
   reorder() {
     const inPlace = new Set();
 
-    console.log(this)
-
     let shouldTraverse = true;
     while (shouldTraverse) {
       const traverseResult = this.traverseReadyNodes(this.outNode, inPlace);
@@ -147,15 +127,8 @@ export class ShaderGraph {
         return false;
       }
     }
-
-    console.log(inPlace)
     
     return true;
-    // for (let dependKey of this._processed[baseNode.id].dependencies) {
-    //   this.reorder(this.getNodeById(dependKey));
-    // }
-
-    // this.ordered.add(baseNode);
   }
 
   compileTree(tree) {
@@ -186,7 +159,6 @@ export class ShaderGraph {
     this.markDependent();
     
     return this.reorder(this.outNode);
-    // this._processed = {};
   }
 
   getNodeNameById(id) {
@@ -216,33 +188,6 @@ export class ShaderGraph {
     for (let node of this.ordered) {
       uniformBlock += node.getFragmentHeader(info.uniforms);
       mainBlock += node.getFragmentBody();
-      /*
-      switch (node.constructor.type) {
-        case 'float':
-        case 'vec2':
-        case 'vec3':
-        case 'vec4':
-          uniformBlock += `uniform ${node.constructor.type} ${node.id};\n`;
-          info.uniforms[node.id] = {value: node.value}
-        break;
-
-        case 'out':
-          let outVar = this.getNodeDepName(node, 0);
-          mainBlock += `gl_FragColor = ${outVar};`;
-        break;
-
-        case 'sum':
-          let a = this.getNodeDepName(node, 0);
-          let b = this.getNodeDepName(node, 1);
-
-          mainBlock += `vec3 ${node.id} = ${a} + ${b};\n`;
-        break;
-
-        default:
-
-        break;
-      }
-      */
     }
 
     info.fragmentShader = [
@@ -258,17 +203,23 @@ export class ShaderGraph {
 
   updateGraph(graph) {
     if (this.compileTree([...graph.children, ...graph.connections])) {
-      let shaderInfo = this.getShaderInfo();
+      const shaderInfo = this.getShaderInfo();
 
-      graph.material.uniforms = shaderInfo.uniforms;
-      graph.material.fragmentShader = shaderInfo.fragmentShader;
+      const material = getBaseMaterial();
 
-      console.log(graph.material.uniforms)
-      console.log(graph.material.fragmentShader)
+      material.uniforms = shaderInfo.uniforms;
+      material.fragmentShader = shaderInfo.fragmentShader;
+
+      material.needsUpdate = true;
+      material.uniformsNeedUpdate = true;
+
+      graph.material.set(material);
     } else {
-      graph.material.uniforms = {};
-      graph.material.fragmentShader = getBaseMaterial().fragmentShader;
+      const material = getBaseMaterial();
+      graph.material.set(material);
     }
+
+    console.log(graph.material)
   }
 };
 
