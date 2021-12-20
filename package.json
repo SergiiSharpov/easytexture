@@ -51,6 +51,7 @@
     "@mui/icons-material": "^5.2.4",
     "@mui/material": "^5.2.4",
     "@react-three/drei": "^8.3.1",
+    "@react-three/fiber": "^7.0.24",
     "@use-gesture/react": "^10.2.4",
     "classnames": "^2.3.1",
     "crc-32": "^1.2.0",
@@ -61,7 +62,6 @@
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "react-flow-renderer": "^9.7.0",
-    "react-three-fiber": "^6.0.13",
     "three": "^0.135.0"
   },
   "devDependencies": {

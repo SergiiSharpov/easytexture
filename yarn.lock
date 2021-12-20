@@ -1350,7 +1350,7 @@
     "utility-types" "^3.10.0"
     "zustand" "^3.5.13"
 
-"@react-three/fiber@>=6.0", "@react-three/fiber@latest":
+"@react-three/fiber@^7.0.24", "@react-three/fiber@>=6.0":
   "integrity" "sha512-CJi1Mex7jqByTEVZoUzg0xZEw63CUjm4bUDx0XIhuAmNUsmFmht7cRt87zUQSSDQvmaDqvoDWW7dD+uFJW/kUQ=="
   "resolved" "https://registry.npmjs.org/@react-three/fiber/-/fiber-7.0.24.tgz"
   "version" "7.0.24"
@@ -5993,13 +5993,6 @@
     "loose-envify" "^1.4.0"
     "prop-types" "^15.7.2"
     "react-is" "^17.0.2"
-
-"react-three-fiber@^6.0.13":
-  "integrity" "sha512-uShQnkMVLvnzwf3YzY9mnzCnpmLpvTQkc0ycrtwk8fyjXmZt2695tLn3tufPF6uxq06UKJRKJcjCVCMXyUcEPQ=="
-  "resolved" "https://registry.npmjs.org/react-three-fiber/-/react-three-fiber-6.0.13.tgz"
-  "version" "6.0.13"
-  dependencies:
-    "@react-three/fiber" "latest"
 
 "react-three-fiber@0.0.0-deprecated":
   "integrity" "sha512-EblIqTAsIpkYeM8bZtC4lcpTE0A2zCEGipFB52RgcQq/q+0oryrk7Sxt+sqhIjUu6xMNEVywV8dr74lz5yWO6A=="
