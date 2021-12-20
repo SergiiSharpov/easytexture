@@ -26,7 +26,7 @@ const darkTheme = createTheme({
 
 // console.log(darkTheme)
 
-let tree = new Tree();
+const tree = new Tree();
 // tree.createNode('vec4', new Vector2());
 
 // tree.createNode('vec3', new Vector2());
