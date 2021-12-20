@@ -7,6 +7,21 @@ body {
   margin: 0;
 }
 
+::-webkit-scrollbar {
+  width: 8px;               /* width of the entire scrollbar */
+}
+
+::-webkit-scrollbar-track {
+  background: #343434;        /* color of the tracking area */
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #000;    /* color of the scroll thumb */
+  /* border-radius: 20px; */
+  /* border: 3px solid orange; */
+  border: 1px solid #343434;
+}
+
 .flow-container {
   width: 100%;
   height: 100%;
@@ -111,6 +126,23 @@ body {
 
   /* max-width: 240px;
   width: 240px; */
+}
+
+.context-menu .context-elements {
+  height: 232px;
+  max-height: 232px;
+
+  background: #000;
+
+  overflow: auto;
+}
+
+.context-elements > div {
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.context-elements > div::before {
+  display: none;
 }
 
 .react-flow .context-menu .MuiAccordion-region {
@@ -393,6 +425,26 @@ body {
   font-size: 15px;
 
   outline: none;
+}
+
+
+.search-field {
+  background: #000;
+  display: flex;
+}
+
+.search-field button {
+  color: #343434;
+}
+
+.search-node {
+  
+  width: 100%;
+  margin: 0!important;
+}
+
+.search-node input {
+  padding-left: 16px;
 }
 
 

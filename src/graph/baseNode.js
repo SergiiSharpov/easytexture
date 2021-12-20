@@ -1,36 +1,39 @@
 import { makeObservable, observable, computed, action } from 'mobx';
 import { Vector2 } from 'three';
 
-class Node {
+class BaseNode {
   // Observables
-  type = null;
-  position = new Vector2();
-  name = '';
+  // name = '';
   id = '';
+
+  position = new Vector2();
   value = null;
 
   // Non observables
+  tree = null;
   accepts = new Set();
   hasHeader = true;
   hasBody = true;
 
-  constructor({position = {x: 0, y: 0}, name = ''}) {
+  constructor({position = {x: 0, y: 0}, id = ''}) {
     makeObservable(this, {
-      name: observable,
+      // name: observable,
       id: observable,
       flat: computed
     });
 
+    this.type = this.constructor.type;
+
     this.position.set(position.x, position.y);
-    this.name = name;
+    this.id = id;
   }
 
-  static displayName = 'Node';
-  static groupName = 'None';
+  static type = 'Node';
 
   get flat() {
+    // console.log(this.constructor.type)
     return {
-      id: this.id, type: this.type,
+      id: this.id, type: this.constructor.type,
       data: { label: this.name, value: this.value },
       position: this.position,
       targetPosition: 'left', sourcePosition: 'right',
@@ -38,7 +41,7 @@ class Node {
     };
   }
 
-  getFragmentHeader(graph) {
+  getFragmentHeader(uniforms = {}) {
     return '';
   }
 
@@ -49,6 +52,10 @@ class Node {
   isValid(graph) {
     return true;
   }
+
+  depsInPlace(nodesInPlace) {
+    return true;
+  }
 }
 
-export default Node;
+export default BaseNode;

@@ -16,7 +16,6 @@ import { createTheme, ThemeProvider } from '@mui/material';
 import Preview from './Preview';
 import Tree from '../store/tree';
 import { Vector2 } from 'three';
-import { TypedComponents } from '../store/tree/core/tree';
 
 
 const darkTheme = createTheme({
@@ -28,10 +27,12 @@ const darkTheme = createTheme({
 // console.log(darkTheme)
 
 let tree = new Tree();
-tree.createNode('vec3', new Vector2());
-tree.createNode('vec3', new Vector2(0, 300));
-tree.createNode('sum', new Vector2(300, 200));
-tree.createNode('out', new Vector2(600, 200));
+// tree.createNode('vec4', new Vector2());
+
+// tree.createNode('vec3', new Vector2());
+// tree.createNode('vec3', new Vector2(0, 300));
+// tree.createNode('sum', new Vector2(300, 200));
+// tree.createNode('out', new Vector2(600, 200));
 
 console.log(tree);
 
@@ -56,7 +57,7 @@ function App() {
           </Box>
           <Container disableGutters={true} sx={{ display: 'flex' }} maxWidth={false} className='workflow-container'>
             <Box sx={{width: '100%', flexGrow: 0, flexShrink: 0}} className='preview-container'>
-              <Preview/>
+              <Preview tree={tree}/>
             </Box>
             <Box sx={{width: '100%'}} className='main-container'>
               <Flow tree={tree}/>

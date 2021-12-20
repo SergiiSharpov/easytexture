@@ -43,6 +43,7 @@ const simpleShaderMaterial = new RawShaderMaterial({
   transparent: true
 });
 
+export const getBaseMaterial = () => simpleShaderMaterial.clone();
 
 export default simpleShaderMaterial;
 

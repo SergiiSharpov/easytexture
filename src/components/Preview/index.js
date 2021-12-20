@@ -2,8 +2,6 @@ import React, { useRef, useState } from 'react'
 import { Canvas, useFrame } from '@react-three/fiber'
 import { OrbitControls } from '@react-three/drei'
 
-import simpleShaderMaterial from '../../store/simpleShaderMaterial';
-
 const Box = (props) => {
   // This reference gives us direct access to the THREE.Mesh object
   const ref = useRef()
@@ -14,7 +12,7 @@ const Box = (props) => {
       {...props}
       ref={ref}
       scale={1}
-      material={simpleShaderMaterial}
+      // material={simpleShaderMaterial}
     >
       <boxGeometry args={[2, 2, 2]} />
       {/* <meshStandardMaterial color='orange' /> */}
@@ -22,13 +20,13 @@ const Box = (props) => {
   )
 }
 
-const Preview = () => {
+const Preview = ({tree}) => {
 
   return (
     <Canvas>
       <ambientLight />
       <pointLight position={[10, 10, 10]} />
-      <Box position={[0, 0, 0]} />
+      <Box position={[0, 0, 0]} material={tree.material} />
       <OrbitControls makeDefault />
     </Canvas>
   )

@@ -1,14 +1,12 @@
 import React, { useCallback } from 'react';
-
-import BaseNode from '../../core/node';
-import OutputLabelComponent from '../../labels/output';
-import { registerComponent } from '../../../../../store/tree/core/tree';
-import { NodeTypes } from '../../../../../store/tree/const';
 import { observer } from 'mobx-react';
-import SliderInput from '../../../../SliderInput';
-// import classNames from 'classnames';
 
-const Vector3Input = observer(({target}) => {
+import Node from '../../../../components/Flow/nodes/core/node';
+import SliderInput from '../../../../components/SliderInput';
+import OutputLabelComponent from '../../../../components/Flow/nodes/labels/output';
+import { GraphNodes } from '../../../const';
+
+const Vector4Input = observer(({target}) => {
   const updateX = useCallback((e) => {
     target.setX(e);
   }, [target]);
@@ -19,6 +17,10 @@ const Vector3Input = observer(({target}) => {
 
   const updateZ = useCallback((e) => {
     target.setZ(e);
+  }, [target]);
+
+  const updateW = useCallback((e) => {
+    target.setW(e);
   }, [target]);
 
   return (
@@ -38,22 +40,25 @@ const Vector3Input = observer(({target}) => {
         value={target.z}
         onChange={updateZ}
       />
+      <SliderInput
+        placeholder='w'
+        value={target.w}
+        onChange={updateW}
+      />
     </div>
   )
 });
 
 
-const Vec3Node = ({ data }) => {
+const Vec4View = ({ data }) => {
 
   return (
-    <BaseNode title='Vec3' type='input'>
-      <OutputLabelComponent id='value' label='Vector' type={NodeTypes.Vector3} />
+    <Node title='Vec4' type='input'>
+      <OutputLabelComponent id='value' label='Vector' type={GraphNodes.Vector4.type} />
       <div className='node-input__label'>Vector:</div>
-      <Vector3Input target={data.value} />
-    </BaseNode>
+      <Vector4Input target={data.value} />
+    </Node>
   )
 };
 
-registerComponent(NodeTypes.Vector3, Vec3Node);
-
-export default Vec3Node;
+export default Vec4View;
