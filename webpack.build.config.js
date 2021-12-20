@@ -19,8 +19,26 @@ module.exports = {
         include: defaultInclude
       },
       {
-        test: /\.jsx?$/,
-        use: [{ loader: 'babel-loader' }],
+        test: /\.(jsx?|tsx?)$/,
+        use: [
+          {
+            loader: 'babel-loader',
+            options: {
+              compact: true,
+              cacheDirectory: true,
+              presets: [
+                '@babel/preset-env',
+                '@babel/preset-react',
+                '@babel/preset-typescript'
+              ],
+              plugins: [
+                '@babel/plugin-proposal-class-properties',
+                '@babel/plugin-proposal-private-methods',
+                '@babel/plugin-proposal-optional-chaining'
+              ]
+            }
+          }
+        ],
         include: defaultInclude
       },
       {
