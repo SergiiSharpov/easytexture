@@ -1,4 +1,4 @@
-import { makeObservable, observable, computed, action } from 'mobx';
+import { makeObservable, observable, computed, action, makeAutoObservable } from 'mobx';
 import { Vector2 } from 'three';
 import { FlowModelMap } from '../../graph';
 import { GraphNodes } from '../../graph/const';
@@ -12,8 +12,20 @@ class Tree {
   connections = [];
 
   ids = {};
-  material = getBaseMaterial();
+  material = makeAutoObservable({
+    value: getBaseMaterial(),
+    set(material) {
+      this.value = material;
+    }
+  });
   compiler = new ShaderGraph();
+
+  materialKey = makeAutoObservable({
+    value: '',
+    setValue(value) {
+      this.value = value;
+    }
+  });
 
   constructor() {
     makeObservable(this, {

@@ -1,8 +1,9 @@
 import React, { useRef, useState } from 'react'
 import { Canvas, useFrame } from '@react-three/fiber'
 import { OrbitControls } from '@react-three/drei'
+import { observer } from 'mobx-react'
 
-const Box = (props) => {
+const Box = observer(({material, ...props}) => {
   // This reference gives us direct access to the THREE.Mesh object
   const ref = useRef()
 
@@ -12,15 +13,14 @@ const Box = (props) => {
       {...props}
       ref={ref}
       scale={1}
-      // material={simpleShaderMaterial}
+      material={material.value}
     >
       <boxGeometry args={[2, 2, 2]} />
-      {/* <meshStandardMaterial color='orange' /> */}
     </mesh>
   )
-}
+});
 
-const Preview = ({tree}) => {
+const Preview = observer(({tree}) => {
 
   return (
     <Canvas>
@@ -30,6 +30,6 @@ const Preview = ({tree}) => {
       <OrbitControls makeDefault />
     </Canvas>
   )
-}
+});
 
 export default Preview;

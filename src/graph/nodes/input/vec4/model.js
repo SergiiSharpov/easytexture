@@ -15,6 +15,8 @@ class Vec4Model extends BaseNode {
 
   getFragmentHeader(uniforms) {
     uniforms[this.id] = {value: this.value};
+
+    console.log(uniforms[this.id].value.x, uniforms[this.id].value.y, uniforms[this.id].value.z);
     
     return `uniform ${this.constructor.type} ${this.id};\n`;
   }
