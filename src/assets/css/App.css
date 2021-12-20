@@ -7,6 +7,21 @@ body {
   margin: 0;
 }
 
+::-webkit-scrollbar {
+  width: 8px;               /* width of the entire scrollbar */
+}
+
+::-webkit-scrollbar-track {
+  background: #343434;        /* color of the tracking area */
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #000;    /* color of the scroll thumb */
+  /* border-radius: 20px; */
+  /* border: 3px solid orange; */
+  border: 1px solid #343434;
+}
+
 .flow-container {
   width: 100%;
   height: 100%;
@@ -84,6 +99,79 @@ body {
 .map-item.Mui-selected {
   background-color: #2196f3!important;
 }
+
+
+.react-flow__handle.react-flow__handle-right {
+  width: 12px;
+  height: 12px;
+  right: -6px;
+
+  /* border-color: transparent; */
+}
+
+.react-flow__handle.react-flow__handle-left {
+  width: 12px;
+  height: 12px;
+  left: -6px;
+
+  /* border-color: transparent; */
+}
+
+
+.react-flow .context-menu {
+  position: absolute;
+  z-index: 12;
+
+  background-color: #4caf50;
+
+  /* max-width: 240px;
+  width: 240px; */
+}
+
+.context-menu .context-elements {
+  height: 232px;
+  max-height: 232px;
+
+  background: #000;
+
+  overflow: auto;
+}
+
+.context-elements > div {
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.context-elements > div::before {
+  display: none;
+}
+
+.react-flow .context-menu .MuiAccordion-region {
+  background-color: #000000;
+  /* background-color: #121212; */
+}
+
+.react-flow .context-menu .MuiAccordionSummary-contentGutters,
+.react-flow .context-menu .MuiAccordionSummary-content {
+  margin: 0;
+}
+
+.react-flow .context-menu .MuiAccordionSummary-root {
+  min-height: 28px;
+  font-size: 15px;
+}
+
+.react-flow .context-menu .MuiAccordionDetails-root {
+  padding: 0;
+}
+
+.react-flow .context-menu .MuiListItemButton-root {
+  padding: 0 0 0 16px;
+}
+
+/* #121212 */
+
+/* MuiAccordionSummary-content css-1betqn-MuiAccordionSummary-content */
+/* MuiAccordionSummary-content Mui-expanded MuiAccordionSummary-contentGutters css-o4b71y-MuiAccordionSummary-content */
 
 
 .node-base {
@@ -227,12 +315,12 @@ body {
   border-radius: 0;
 }
 
-.node-input_group .MuiFormControl-root:first-of-type .MuiFilledInput-root {
+.node-input_group .input-slider:first-of-type .input-slider__input {
   border-top-left-radius: 4px;
   border-top-right-radius: 4px;
 }
 
-.node-input_group .MuiFormControl-root:last-of-type .MuiFilledInput-root {
+.node-input_group .input-slider:last-of-type .input-slider__input {
   border-bottom-left-radius: 4px;
   border-bottom-right-radius: 4px;
 }
@@ -240,5 +328,124 @@ body {
 /* MuiFilledInput-root MuiFilledInput-underline MuiInputBase-root MuiInputBase-colorPrimary MuiInputBase-formControl MuiInputBase-sizeSmall MuiInputBase-hiddenLabel css-121n1y1-MuiInputBase-root-MuiFilledInput-root */
 
 /* text-align: right; */
+.react-flow__handle.sampler {
+  background-color: #2196f3;
+}
+.react-flow__handle.vec2 {
+  background-color: #8bc34a;
+}
+
+.react-flow__handle.vec3 {
+  background-color: #009688;
+}
+
+.react-flow__handle.vec4 {
+  background-color: #e91e63;
+}
+
+.react-flow__handle.float {
+  background-color: #673ab7;
+}
+
+.input-slider .input-slider__input {
+  display: grid;
+  grid-template-columns: auto 20px;
+
+  background-color: rgba(255, 255, 255, 0.09);
+  border-bottom: 1px solid #343434;
+  transition: border-color 0.2s;
+
+  height: 40px;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+.input-slider__input:hover {
+  background-color: rgba(255, 255, 255, 0.13);
+}
+
+.input-slider__input.focused {
+  background-color: rgba(255, 255, 255, 0.09);
+  border-color: #2196f3;
+}
+
+.input-slider .input-slider__input__content {
+  height: 100%;
+}
+
+.input-slider__input__handles {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  opacity: 0;
+  transition: opacity 0.2s;
+
+  touch-action: none;
+}
+
+.input-slider:hover .input-slider__input__handles {
+  opacity: 1.0;
+}
+
+.input-slider__input__handles > svg:hover {
+  background-color: rgba(255, 255, 255, 0.13);
+}
+
+.input-slider__input__handles > svg:first-child {
+  transform: rotate(180deg);
+}
+
+.input-slider__input__handles > svg:first-child,
+.input-slider__input__handles > svg:last-child {
+  width: 20px;
+  height: 20px;
+
+  /* cursor: ns-resize; */
+  cursor: initial;
+}
+
+.input-slider__input input {
+  -webkit-tap-highlight-color: transparent;
+  display: block;
+
+  min-width: 0;
+  width: 100%;
+
+  padding: 8px 24px 9px 12px;
+  border: 0;
+  box-sizing: border-box;
+  background: transparent;
+  color: #fff;
+
+  font: inherit;
+  letter-spacing: inherit;
+
+  font-size: 15px;
+
+  outline: none;
+}
+
+
+.search-field {
+  background: #000;
+  display: flex;
+}
+
+.search-field button {
+  color: #343434;
+}
+
+.search-node {
+  
+  width: 100%;
+  margin: 0!important;
+}
+
+.search-node input {
+  padding-left: 16px;
+}
+
 
 

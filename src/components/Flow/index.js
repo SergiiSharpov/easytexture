@@ -1,6 +1,7 @@
-import React, { useCallback, useState } from 'react';
-import ReactFlow, { Controls, Handle } from 'react-flow-renderer';
-import { Vector3 } from 'three';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import ReactFlow, { Controls } from 'react-flow-renderer';
+import { observer } from 'mobx-react';
+
 
 // you need these styles for React Flow to work properly
 import 'react-flow-renderer/dist/style.css';
@@ -10,103 +11,25 @@ import 'react-flow-renderer/dist/style.css';
  
 
 import bgImage from './../../assets/images/prototype/dark/texture_08.png'
-import BaseNode from './nodes/core/node';
-import Vec3Node from './nodes/math/vec3';
 import compile from '../../shadergen';
 import simpleShaderMaterial from '../../store/simpleShaderMaterial';
-//console.log(bgImage)
-//document.body.style.backgroundImage = `url(${bgImage})`;
 
-const elements = [
-  { id: '1', type: 'vec3', data: { label: 'vector01', value: new Vector3() }, position: { x: 100, y: 0 }, targetPosition: 'left', sourcePosition: 'right' },
-  { id: '2', type: 'vec3', data: { label: 'vector02', value: new Vector3(0, 0.5, 0.25) }, position: { x: 100, y: 300 }, targetPosition: 'left', sourcePosition: 'right' },
-  // you can also pass a React Node as a label
-  { id: '3', type: 'sum', data: { label: "sum01" }, position: { x: 450, y: 200 }, targetPosition: 'left', sourcePosition: 'right' },
-
-  { id: '4', type: 'out', data: { label: 'Out' }, position: { x: 750, y: 200 }, targetPosition: 'left', sourcePosition: 'right' },
-  
-  // { id: 'e1-2', source: '1', sourceHandle: 'a', target: '2', targetHandle: 'a', animated: true },
-  { id: 'e1-3', source: '1', sourceHandle: 'a', target: '3', targetHandle: 'a', animated: false },
-  { id: 'e2-3', source: '2', sourceHandle: 'a', target: '3', targetHandle: 'b', animated: false },
-  { id: 'e3-4', source: '3', sourceHandle: 'a', target: '4', targetHandle: 'a', animated: false },
-];
-
-const InputLabelComponent = ({id, label}) => {
-  return (
-    <div className='node-base__content'>
-      <Handle type="target" position="left" id={id} />
-      <div className='node-base__content__title' style={{textAlign: 'left'}}>{label}</div>
-    </div>
-  )
-}
-
-const OutputLabelComponent = ({id, label}) => {
-  return (
-    <div className='node-base__content'>
-      <Handle type="source" position="right" id={id} />
-      <div className='node-base__content__title' style={{textAlign: 'right'}}>{label}</div>
-    </div>
-  )
-}
-
-const HeaderNodeComponent = ({children}) => {
-  return (
-    <div className='node-base__header'>
-      {children}
-    </div>
-  )
-}
-
-const InputNode = ({children, data}) => {
-  return (
-    <div className='node-base node-base__input'>
-      <HeaderNodeComponent>Title</HeaderNodeComponent>
-      <OutputLabelComponent id="a" label={data.label} />
-      {children}
-    </div>
-  )
-}
-
-const OutputNode = ({children, data}) => {
-  return (
-    <BaseNode title='Result color' type='output' >
-      <InputLabelComponent id="a" label={data.label} />
-      {children}
-    </BaseNode>
-  )
-}
-
-const BaseNodeNext = ({children, data}) => {
-  return (
-    <BaseNode title='Sum' >
-      <OutputLabelComponent id="a" label='Out' />
-      <InputLabelComponent id="a" label='In 1' />
-      <InputLabelComponent id="b" label='In 2' />
-      {children}
-    </BaseNode>
-  )
-}
+import { FlowComponentsMap } from '../../graph';
+import PaneContextMenu from './PaneContextMenu';
 
 
-const CustomNodeComponent = ({ data }) => {
-  return (
-    <div className='node-base'>
-      <OutputLabelComponent id="a" label={data.label} />
-      <InputLabelComponent id="a" label={data.label} />
-    </div>
-  );
-};
+// compile(elements, simpleShaderMaterial);
 
-const nodeTypes = {
-  vec3: Vec3Node,
-  out: OutputNode,
-  sum: BaseNodeNext
-};
 
-compile(elements, simpleShaderMaterial);
 
-const Flow = () => {
+const Flow = observer(({tree}) => {
   const [rfInstance, setRfInstance] = useState(null);
+
+  const [paneContextEvent, setPaneContextEvent] = useState(null);
+
+  const onPaneContextClose = useCallback(() => {
+    setPaneContextEvent(null);
+  }, []);
   // const onConnect = (params) => setElements((els) => addEdge(params, els));
 
   const onLoad = useCallback((instance) => {
@@ -119,19 +42,51 @@ const Flow = () => {
     // console.log('zoomIn', e, zoom, props);
   }, [rfInstance])
 
+  const onPaneContextMenu = useCallback((e) => {
+    // setListPos({top: e.nativeEvent.offsetY, left: e.nativeEvent.offsetX});
+    setPaneContextEvent(e);
+  }, []);
+
+  const onEdgeUpdate = useCallback((e, flowProps) => {
+    tree.disconnect(flowProps.id);
+  }, [tree]);
+
+  const onElementsRemove = useCallback((e) => {
+    for (let item of e) {
+      tree.removeNode(item.type, item.id);
+    }
+  }, []);
+
   return (
     <div
       className='flow-container'
       style={{backgroundImage: `url(${bgImage})`}}
     >
-      <ReactFlow elements={elements} nodeTypes={nodeTypes} onLoad={onLoad}>
+      <ReactFlow
+        elements={tree.flat}
+        nodeTypes={FlowComponentsMap}
+        onLoad={onLoad}
+        onConnect={tree.onConnect}
+
+        onEdgeUpdate={console.log}
+        onEdgeUpdateEnd={onEdgeUpdate}
+        onPaneContextMenu={onPaneContextMenu}
+
+        onPaneClick={onPaneContextClose}
+        onNodeDragStart={onPaneContextClose}
+        onMove={onPaneContextClose}
+
+        onElementsRemove={onElementsRemove}
+      >
         <Controls
           onZoomIn={onZoom}
           onZoomOut={onZoom}
         />
+        <PaneContextMenu onClose={onPaneContextClose} event={paneContextEvent} tree={tree} />
       </ReactFlow>
+      
     </div>
   );
-};
+});
 
 export default Flow;

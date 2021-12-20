@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import classNames from 'classnames';
 
-const HeaderNodeComponent = ({children, closed, onClose}) => {
+const NodeHeader = ({children, closed, onClose}) => {
   const className = classNames({
     'node-base__header__btn': true,
     'node-node-base__header__btn__closed': closed
@@ -10,14 +10,17 @@ const HeaderNodeComponent = ({children, closed, onClose}) => {
   return (
     <div className='node-base__header'>
       <div className='node-base__header__title'>{children}</div>
-      <div className={className}>
+      <div
+        className={className}
+        onMouseDown={e => e.stopPropagation()}
+      >
         <div onClick={() => onClose(!closed)}><span/></div>
       </div>
     </div>
   )
 }
 
-const BaseNode = ({children, title, type = 'base'}) => {
+const Node = ({children, title, type = 'base'}) => {
   const [closed, setClosed] = useState(false);
 
   const className = classNames({
@@ -29,10 +32,10 @@ const BaseNode = ({children, title, type = 'base'}) => {
 
   return (
     <div className={className}>
-      <HeaderNodeComponent closed={closed} onClose={setClosed}>{title}</HeaderNodeComponent>
+      <NodeHeader closed={closed} onClose={setClosed}>{title}</NodeHeader>
       <div className='node-base__body'>{children}</div>
     </div>
   )
 }
 
-export default BaseNode;
+export default Node;

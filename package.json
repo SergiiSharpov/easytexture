@@ -48,9 +48,12 @@
   "dependencies": {
     "@emotion/react": "^11.7.1",
     "@emotion/styled": "^11.6.0",
+    "@mui/icons-material": "^5.2.4",
     "@mui/material": "^5.2.4",
     "@react-three/drei": "^8.3.1",
+    "@use-gesture/react": "^10.2.4",
     "classnames": "^2.3.1",
+    "crc-32": "^1.2.0",
     "mobx": "^6.3.8",
     "mobx-react": "^7.2.1",
     "popmotion": "^11.0.3",
@@ -63,6 +66,7 @@
   },
   "devDependencies": {
     "@babel/core": "^7.15.0",
+    "@babel/plugin-proposal-export-default-from": "^7.16.5",
     "@babel/preset-env": "^7.15.0",
     "@babel/preset-react": "^7.14.5",
     "@types/three": "^0.135.0",
