@@ -27,7 +27,7 @@ const Input = ( { value, onChange, onNumberChange, ...props }: IProps ) => {
       '-',
       '-.',
       '.'
-    ].includes( str ) ) {
+    ].includes( str ) === false ) {
       let res = ( Number( ref.current.value ) ) - ( e.altKey ? 0.1 : 1.0 );
       onNumberChange( Number( res.toFixed( 3 ) ) );
     } else {
@@ -41,7 +41,7 @@ const Input = ( { value, onChange, onNumberChange, ...props }: IProps ) => {
       '-',
       '-.',
       '.'
-    ].includes( str ) ) {
+    ].includes( str ) === false ) {
       let res = ( Number( ref.current.value ) ) + ( e.altKey ? 0.1 : 1.0 );
       onNumberChange( Number( res.toFixed( 3 ) ) );
     } else {
