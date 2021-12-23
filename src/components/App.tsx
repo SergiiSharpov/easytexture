@@ -1,28 +1,24 @@
-import React from 'react'
+import React from 'react';
 
 import Flow from './Flow';
 import MapList from './MapList';
 
-import '../assets/css/App.css'
+import '../assets/css/App.css';
 
 import CssBaseline from '@mui/material/CssBaseline';
 import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
 
-import TouchRipple from '@mui/material/ButtonBase/TouchRipple';
+// import TouchRipple from '@mui/material/ButtonBase/TouchRipple';
 import ButtonBase from '@mui/material/ButtonBase';
 
 import { createTheme, ThemeProvider } from '@mui/material';
 import Preview from './Preview';
 import Tree from '../store/tree';
-import { Vector2 } from 'three';
+// import { Vector2 } from 'three';
 
 
-const darkTheme = createTheme({
-  palette: {
-    mode: 'dark',
-  },
-});
+const darkTheme = createTheme( { palette: { mode: 'dark' } } );
 
 // console.log(darkTheme)
 
@@ -34,7 +30,7 @@ const tree = new Tree();
 // tree.createNode('sum', new Vector2(300, 200));
 // tree.createNode('out', new Vector2(600, 200));
 
-console.log(tree);
+console.log( tree );
 
 function App() {
   return (
@@ -44,10 +40,15 @@ function App() {
       <p>I hope you enjoy using basic-electron-react-boilerplate to start your dev off right!</p> */}
 
       {/* <Flow/> */}
-      <ThemeProvider theme={darkTheme}>
+      <ThemeProvider theme={ darkTheme }>
         <CssBaseline />
-        <Container disableGutters={true} sx={{ display: 'flex' }} maxWidth={false} className='project-container'>
-          <Box sx={{width: 300, flexGrow: 0, flexShrink: 0}} className='menu-container'>
+        <Container
+          disableGutters={ true }
+          sx={ { display: 'flex' } }
+          maxWidth={ false }
+          className='project-container'
+        >
+          <Box component = 'div' sx={ { width: 300, flexGrow: 0, flexShrink: 0 } } className='menu-container'>
             <div className='texture-preview-container'>
               <ButtonBase>
                 <div className='texture-preview'>Preview</div>
@@ -55,18 +56,23 @@ function App() {
             </div>
             <MapList/>
           </Box>
-          <Container disableGutters={true} sx={{ display: 'flex' }} maxWidth={false} className='workflow-container'>
-            <Box sx={{width: '100%', flexGrow: 0, flexShrink: 0}} className='preview-container'>
-              <Preview tree={tree}/>
+          <Container
+            disableGutters={ true }
+            sx={ { display: 'flex' } }
+            maxWidth={ false }
+            className='workflow-container'
+          >
+            <Box component = 'div' sx={ { width: '100%', flexGrow: 0, flexShrink: 0 } } className='preview-container'>
+              <Preview tree={ tree }/>
             </Box>
-            <Box sx={{width: '100%'}} className='main-container'>
-              <Flow tree={tree}/>
+            <Box component = 'div' sx={ { width: '100%' } } className='main-container'>
+              <Flow tree={ tree }/>
             </Box>
           </Container>
         </Container>
       </ThemeProvider>
     </div>
-  )
+  );
 }
 
-export default App
+export default App;

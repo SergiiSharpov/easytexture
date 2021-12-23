@@ -1,6 +1,6 @@
 import { RawShaderMaterial, DoubleSide } from 'three';
 
-export const SimpleVertexData = (`
+export const SimpleVertexData = ( `
 precision mediump float;
 precision mediump int;
 
@@ -11,37 +11,37 @@ attribute vec3 position;
 
 varying vec3 vPosition;
 
-void main()	{
+void main() {
 
   vPosition = position;
 
   gl_Position = projectionMatrix * modelViewMatrix * vec4( position, 1.0 );
 
 }
-`).trim();
+` ).trim();
 
-export const SimpleFragmentData = (`
+export const SimpleFragmentData = ( `
 precision mediump float;
 precision mediump int;
 
 varying vec3 vPosition;
 
-void main()	{
+void main() {
 
   vec4 color = vec4( 1.0, 1.0, 1.0, 1.0 );
 
   gl_FragColor = color;
 
 }
-`).trim();
+` ).trim();
 
-const simpleShaderMaterial = new RawShaderMaterial({
+const simpleShaderMaterial = new RawShaderMaterial( {
   uniforms: {},
   vertexShader: SimpleVertexData,
   fragmentShader: SimpleFragmentData,
   side: DoubleSide,
   transparent: true
-});
+} );
 
 export const getBaseMaterial = () => simpleShaderMaterial.clone();
 
