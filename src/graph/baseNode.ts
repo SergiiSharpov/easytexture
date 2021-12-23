@@ -3,7 +3,8 @@ import { Vector2 } from 'three';
 
 class BaseNode {
   // Observables
-  // name = '';
+  name = '';
+
   id = '';
 
   position = new Vector2();
@@ -26,7 +27,7 @@ class BaseNode {
       flat: computed
     } );
 
-    this.type = this.constructor.type;
+    // this.type = this.constructor.type;
 
     this.position.set( position.x, position.y );
     this.id = id;
