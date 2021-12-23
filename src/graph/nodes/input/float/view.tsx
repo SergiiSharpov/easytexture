@@ -6,32 +6,32 @@ import SliderInput from '../../../../components/SliderInput';
 import OutputLabelComponent from '../../../../components/Flow/nodes/labels/output';
 import { GraphNodes } from '../../../const';
 
-const FloatInput = observer(({target}) => {
-  const update = useCallback((e) => {
-    target.set(e);
-  }, [target]);
+const FloatInput = observer( ( { target } ) => {
+  const update = useCallback( ( e ) => {
+    target.set( e );
+  }, [target] );
 
   return (
     <div className='node-input node-input_group'>
       <SliderInput
         placeholder='x'
-        value={target.value}
-        onChange={update}
+        value={ target.value }
+        onChange={ update }
       />
     </div>
-  )
-});
+  );
+} );
 
 
-const FloatView = ({ data }) => {
+const FloatView = ( { data } ) => {
 
   return (
     <Node title='Float' type='input'>
-      <OutputLabelComponent id='value' label='Float' type={GraphNodes.Float.type} />
+      <OutputLabelComponent id='value' label='Float' type={ GraphNodes.Float.type } />
       <div className='node-input__label'>Vector:</div>
-      <FloatInput target={data.value} />
+      <FloatInput target={ data.value } />
     </Node>
-  )
+  );
 };
 
 export default FloatView;
