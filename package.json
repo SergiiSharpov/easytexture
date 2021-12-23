@@ -85,6 +85,7 @@
     "electron-devtools-installer": "^3.2.0",
     "electron-packager": "^15.3.0",
     "eslint": "^7.22.0",
+    "eslint-import-resolver-webpack": "^0.13.2",
     "eslint-plugin-import": "^2.25.3",
     "eslint-plugin-react": "^7.23.1",
     "eslint-plugin-react-hooks": "^4.3.0",

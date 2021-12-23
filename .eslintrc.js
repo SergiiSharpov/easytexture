@@ -356,7 +356,18 @@ module.exports = {
         '.tsx'
       ]
     },
-    'import/resolver': { typescript: {} },
+    'import/resolver': {
+      node: {
+        extensions: [
+          '.js',
+          '.jsx',
+          '.ts',
+          '.tsx'
+        ]
+      },
+      webpack: { config: 'webpack.dev.config.js' },
+      typescript: {}
+    },
     react: { version: 'detect' }
   }
 };
