@@ -7,24 +7,28 @@ class BaseNode {
   id = '';
 
   position = new Vector2();
+
   value = null;
 
   // Non observables
   tree = null;
+
   accepts = new Set();
+
   hasHeader = true;
+
   hasBody = true;
 
-  constructor({position = {x: 0, y: 0}, id = ''}) {
-    makeObservable(this, {
+  constructor( { position = { x: 0, y: 0 }, id = '' } ) {
+    makeObservable( this, {
       // name: observable,
       id: observable,
       flat: computed
-    });
+    } );
 
     this.type = this.constructor.type;
 
-    this.position.set(position.x, position.y);
+    this.position.set( position.x, position.y );
     this.id = id;
   }
 
@@ -33,27 +37,29 @@ class BaseNode {
   get flat() {
     // console.log(this.constructor.type)
     return {
-      id: this.id, type: this.constructor.type,
+      id: this.id,
+      type: this.constructor.type,
       data: { label: this.name, value: this.value },
       position: this.position,
-      targetPosition: 'left', sourcePosition: 'right',
+      targetPosition: 'left',
+      sourcePosition: 'right'
       // dragHandle: '.node-base__header'
     };
   }
 
-  getFragmentHeader(uniforms = {}) {
+  getFragmentHeader( uniforms = {} ) {
     return '';
   }
 
-  getFragmentBody(graph) {
+  getFragmentBody( graph ) {
     return '';
   }
 
-  isValid(graph) {
+  isValid( graph ) {
     return true;
   }
 
-  depsInPlace(nodesInPlace) {
+  depsInPlace( nodesInPlace ) {
     return true;
   }
 }

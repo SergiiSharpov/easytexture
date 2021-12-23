@@ -1,6 +1,5 @@
 
-
-export const GraphNodes = {
+const GraphNodes = {
   Out: {
     type: 'out',
     group: 'Output',
@@ -30,15 +29,34 @@ export const GraphNodes = {
     type: 'vectorMath',
     group: 'Math',
     name: 'Vector math'
-  },
-};
+  }
+} as const;
 
-export const GroupedGraphNodes = {};
+const arrGraphNodesValuesTypes = Object.values( GraphNodes ).map( ( v ) => v.type );
+const arrGraphNodesValuesGroups = Object.values( GraphNodes ).map( ( v ) => v.group );
 
-Object.values(GraphNodes).map( (node) => {
-  if (!GroupedGraphNodes[node.group]) {
-    GroupedGraphNodes[node.group] = [];
+export type graphNodeType = typeof arrGraphNodesValuesTypes[ number ];
+export type graphNodeGroup = typeof arrGraphNodesValuesGroups[ number ];
+export type graphNode = {
+  type: graphNodeType,
+  group: graphNodeGroup,
+  name: string
+}
+export type graphNodes = {
+  [key:string]: graphNode
+}
+
+const GroupedGraphNodes = {} as {[key:string]: graphNode[] };
+( Object.values( GraphNodes as graphNodes ) ).forEach( ( node ) => {
+  if ( !GroupedGraphNodes[ node.group ] ) {
+    GroupedGraphNodes[ node.group ] = [] as graphNode[];
   }
 
-  GroupedGraphNodes[node.group].push(node);
-});
+  GroupedGraphNodes[ node.group ].push( node );
+} );
+const GraphNodesTyped = GraphNodes as graphNodes;
+
+export {
+  GroupedGraphNodes,
+  GraphNodesTyped as GraphNodes
+};

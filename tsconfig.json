@@ -25,6 +25,7 @@
     "resolveJsonModule": true,
     "lib": ["ES2020", "dom", "DOM.Iterable", "ScriptHost"],
     "paths": {
+      "src/*": ["src/*"]
     },
     "watch": true
   },
