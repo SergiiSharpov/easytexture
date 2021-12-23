@@ -73,6 +73,7 @@ module.exports = {
       {
         extensions: [
           '.js',
+          '.ts',
           '.jsx',
           '.tsx'
         ]
@@ -364,7 +365,8 @@ module.exports = {
           '.tsx'
         ]
       },
-      webpack: { config: './webpack.dev.config.js' }
+      webpack: { config: 'webpack.dev.config.js' },
+      typescript: {}
     },
     react: { version: 'detect' }
   }

@@ -1,33 +1,35 @@
-import crc32 from 'crc-32';
-import { getBaseMaterial } from "../utils/simpleShaderMaterial";
+// import crc32 from 'crc-32';
+import { getBaseMaterial } from '../utils/simpleShaderMaterial';
 
 
-
-Set.prototype.get = function(idx){
-  if(typeof idx !== 'number') throw new TypeError(`Argument idx must be a Number. Got [${idx}]`);
+Set.prototype.get = function( idx ) {
+  if( typeof idx !== 'number' ) {
+    throw new TypeError( `Argument idx must be a Number. Got [${ idx }]` );
+  }
 
   let i = 0;
-  for( let iter = this.keys(), curs = iter.next(); !curs.done; curs = iter.next(), i++ )
-    if(idx === i) return curs.value;
+  for( let iter = this.keys(), curs = iter.next(); !curs.done; curs = iter.next(), i++ ) {
+    if( idx === i ) {
+      return curs.value;
+    }
+  }
 
-  throw new RangeError(`Index [${idx}] is out of range [0-${i-1}]`);
-}
+  throw new RangeError( `Index [${ idx }] is out of range [0-${ i - 1 }]` );
+};
 
 
-
-const FragmentHeaderShader = (`
+const FragmentHeaderShader = ( `
 precision mediump float;
 precision mediump int;
-`).trim();
+` ).trim();
 
-const FragmentBeforeMainShader = (`
+const FragmentBeforeMainShader = ( `
 void main()	{
-`).trim();
+` ).trim();
 
-const FragmentAfterMainShader = (`
+const FragmentAfterMainShader = ( `
 }
-`).trim();
-
+` ).trim();
 
 
 export class ShaderGraph {
@@ -42,33 +44,34 @@ export class ShaderGraph {
     this.ordered = new Set();
   }
 
-  setOutNodeFromTree(tree) {
-    for (let node of tree) {
-      if (node.constructor.type === 'out') {
+  setOutNodeFromTree( tree ) {
+    for ( let node of tree ) {
+      if ( node.constructor.type === 'out' ) {
         this.outNode = node;
         break;
       }
     }
   }
 
-  processNode(node) {
-    console.log('type', node.constructor.type)
-    if (!node.constructor.type) {
-      this.dependencies.push(node);
+  processNode( node ) {
+    console.log( 'type', node.constructor.type );
+    if ( !node.constructor.type ) {
+      this.dependencies.push( node );
+
       return false;
     }
 
-    this.nodes[node.id] = node;
+    this.nodes[ node.id ] = node;
 
-    this._processed[node.id] = {
+    this._processed[ node.id ] = {
       origin: node,
       dependencies: new Set()
     };
   }
 
-  getNodeById(id) {
-    for (let node of Object.values(this.nodes)) {
-      if (node.id === id) {
+  getNodeById( id ) {
+    for ( let node of Object.values( this.nodes ) ) {
+      if ( node.id === id ) {
         return node;
       }
     }
@@ -77,32 +80,32 @@ export class ShaderGraph {
   }
 
   markDependent() {
-    for (let dep of this.dependencies) {
-      if (this._processed[dep.target]) {
-        this._processed[dep.target].dependencies.add(dep.source);
+    for ( let dep of this.dependencies ) {
+      if ( this._processed[ dep.target ] ) {
+        this._processed[ dep.target ].dependencies.add( dep.source );
       }
     }
   }
 
-  traverseReadyNodes(targetNode, nodesInPlace) {
+  traverseReadyNodes( targetNode, nodesInPlace ) {
     let processed = 0;
 
-    for (let dependKey of this._processed[targetNode.id].dependencies) {
-      processed += this.traverseReadyNodes(this.getNodeById(dependKey), nodesInPlace);
+    for ( let dependKey of this._processed[ targetNode.id ].dependencies ) {
+      processed += this.traverseReadyNodes( this.getNodeById( dependKey ), nodesInPlace );
     }
 
     // Has no dependencies
-    if (this._processed[targetNode.id].dependencies.size === 0) {
-      if (!nodesInPlace.has(targetNode.id)) {
-        nodesInPlace.add(targetNode.id);
-        this.ordered.add(targetNode);
+    if ( this._processed[ targetNode.id ].dependencies.size === 0 ) {
+      if ( !nodesInPlace.has( targetNode.id ) ) {
+        nodesInPlace.add( targetNode.id );
+        this.ordered.add( targetNode );
       }
     } else {
       // Check if dependencies in place
-      if (targetNode.depsInPlace(nodesInPlace)) {
-        if (!nodesInPlace.has(targetNode.id)) {
-          nodesInPlace.add(targetNode.id);
-          this.ordered.add(targetNode);
+      if ( targetNode.depsInPlace( nodesInPlace ) ) {
+        if ( !nodesInPlace.has( targetNode.id ) ) {
+          nodesInPlace.add( targetNode.id );
+          this.ordered.add( targetNode );
         }
       }
     }
@@ -114,24 +117,24 @@ export class ShaderGraph {
     const inPlace = new Set();
 
     let shouldTraverse = true;
-    while (shouldTraverse) {
-      const traverseResult = this.traverseReadyNodes(this.outNode, inPlace);
+    while ( shouldTraverse ) {
+      const traverseResult = this.traverseReadyNodes( this.outNode, inPlace );
 
-      if (traverseResult === 0) {
-        console.log('Success!');
+      if ( traverseResult === 0 ) {
+        console.log( 'Success!' );
         shouldTraverse = false;
-      } else if (traverseResult === -1) {
-        console.log('Fail! Not enough nodes');
+      } else if ( traverseResult === -1 ) {
+        console.log( 'Fail! Not enough nodes' );
         shouldTraverse = false;
 
         return false;
       }
     }
-    
+
     return true;
   }
 
-  compileTree(tree) {
+  compileTree( tree ) {
     this.nodes = {};
     this.dependencies = [];
     this.outNode = null;
@@ -139,31 +142,33 @@ export class ShaderGraph {
     this._processed = {};
     this.ordered.clear();
 
-    this.setOutNodeFromTree(tree);
-    if (!this.outNode) {
-      console.error("Graph doesn't has an output node");
+    this.setOutNodeFromTree( tree );
+    if ( !this.outNode ) {
+      console.error( 'Graph doesn\'t has an output node' );
+
       return false;
     }
 
     // Get input nodes + get nodes flat object with names
-    for (let node of tree) {
-      this.processNode(node);
-      if (node.constructor.type) {
-        if (!node.isValid()) {
-          console.log("Tree isn't valid");
+    for ( let node of tree ) {
+      this.processNode( node );
+      if ( node.constructor.type ) {
+        if ( !node.isValid() ) {
+          console.log( 'Tree isn\'t valid' );
+
           return false;
         }
       }
     }
 
     this.markDependent();
-    
-    return this.reorder(this.outNode);
+
+    return this.reorder( this.outNode );
   }
 
-  getNodeNameById(id) {
-    for (let node of Object.values(this.nodes)) {
-      if (node.id === id) {
+  getNodeNameById( id ) {
+    for ( let node of Object.values( this.nodes ) ) {
+      if ( node.id === id ) {
         return node.id;
       }
     }
@@ -171,8 +176,8 @@ export class ShaderGraph {
     return null;
   }
 
-  getNodeDepName(node, depIndex) {
-    return this.getNodeNameById(this._processed[node.id].dependencies.get(depIndex));
+  getNodeDepName( node, depIndex ) {
+    return this.getNodeNameById( this._processed[ node.id ].dependencies.get( depIndex ) );
   }
 
   getShaderInfo() {
@@ -181,12 +186,12 @@ export class ShaderGraph {
       fragmentShader: ''
     };
 
-    let uniformBlock = "";
-    let mainBlock = "";
+    let uniformBlock = '';
+    let mainBlock = '';
 
-    
-    for (let node of this.ordered) {
-      uniformBlock += node.getFragmentHeader(info.uniforms);
+
+    for ( let node of this.ordered ) {
+      uniformBlock += node.getFragmentHeader( info.uniforms );
       mainBlock += node.getFragmentBody();
     }
 
@@ -196,13 +201,13 @@ export class ShaderGraph {
       FragmentBeforeMainShader,
       mainBlock,
       FragmentAfterMainShader
-    ].join('\n');
+    ].join( '\n' );
 
     return info;
   }
 
-  updateGraph(graph) {
-    if (this.compileTree([...graph.children, ...graph.connections])) {
+  updateGraph( graph ) {
+    if ( this.compileTree( [...graph.children, ...graph.connections] ) ) {
       const shaderInfo = this.getShaderInfo();
 
       const material = getBaseMaterial();
@@ -213,24 +218,24 @@ export class ShaderGraph {
       material.needsUpdate = true;
       material.uniformsNeedUpdate = true;
 
-      graph.material.set(material);
+      graph.material.set( material );
     } else {
       const material = getBaseMaterial();
-      graph.material.set(material);
+      graph.material.set( material );
     }
 
-    console.log(graph.material)
+    console.log( graph.material );
   }
-};
+}
 
 const graph = new ShaderGraph();
 
-const compile = (tree, material) => {
-  graph.compileTree(tree);
+const compile = ( tree, material ) => {
+  graph.compileTree( tree );
   let shaderInfo = graph.getShaderInfo();
 
   material.uniforms = shaderInfo.uniforms;
   material.fragmentShader = shaderInfo.fragmentShader;
-}
+};
 
 export default compile;
