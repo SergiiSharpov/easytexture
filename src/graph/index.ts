@@ -70,10 +70,10 @@ export type graphNodeType = typeof arrGraphNodesValuesTypes[ number ];
 export type graphNodeGroup = typeof arrGraphNodesValuesGroups[ number ];
 
 const NodesTyped = GraphNodes as unknown as nodeData[];
-const GroupedNodes = {} as {[key:string]: nodeData[] };
-const Nodes: {[key: string]: nodeData} = {};
-const Views: {[key: string]: View} = {};
-const Models: {[key: string]: ModelConstructor} = {};
+const GroupedNodes = {} as {[key in graphNodeGroup] : nodeData[] };
+const Nodes = {} as {[key in graphNodeType]: nodeData};
+const Views = {} as {[key in graphNodeType]: View};
+const Models = {} as {[key in graphNodeType]: ModelConstructor};
 NodesTyped.forEach( ( node ) => {
   if ( !GroupedNodes[ node.group ] ) {
     GroupedNodes[ node.group ] = [] as nodeData[];

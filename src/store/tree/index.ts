@@ -1,6 +1,6 @@
 import { makeObservable, observable, computed, action, makeAutoObservable } from 'mobx';
 import { RawShaderMaterial, Vector2 } from 'three';
-import { Model, Models, graphNodeType } from '../../graph';
+import { Model, Models, graphNodeType, Nodes } from '../../graph';
 import { ShaderGraph } from '../../shadergen';
 import IDGenerator from '../../utils/idGenerator';
 import { getBaseMaterial } from '../../utils/simpleShaderMaterial';
@@ -42,7 +42,7 @@ class Tree {
     } );
     this.ids = {} as {[key in graphNodeType] : IDGenerator};
 
-    this.createNode( 'out', {} );
+    this.createNode( Nodes.out.type, {} );
   }
 
   hasConnection( props: _IConnectionProps ) {
@@ -115,7 +115,7 @@ class Tree {
   }
 
   removeNode( type: graphNodeType, id: string ) {
-    if ( type === 'out' ) {
+    if ( type === Nodes.out.type ) {
       return false;
     }
 

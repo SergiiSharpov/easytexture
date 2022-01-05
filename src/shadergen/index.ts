@@ -1,6 +1,6 @@
 // import crc32 from 'crc-32';
 // import BaseNode from 'src/graph/baseNode';
-import { Model } from 'src/graph';
+import { Model, Nodes } from 'src/graph';
 import Tree from 'src/store/tree';
 import Connection from 'src/store/tree/connection';
 import { getBaseMaterial } from '../utils/simpleShaderMaterial';
@@ -59,7 +59,7 @@ export class ShaderGraph {
 
   setOutNodeFromTree( tree: ( Model | Connection )[] ) {
     for ( let node of tree ) {
-      if ( ( node as Model ).type === 'out' ) {
+      if ( ( node as Model ).type === Nodes.out.type ) {
         return node as Model;
       }
     }

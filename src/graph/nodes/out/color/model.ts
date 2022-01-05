@@ -1,8 +1,8 @@
-import { graphNodeType } from 'src/graph';
+// import { graphNodeType } from 'src/graph';
 import BaseNode from '../../../baseNode';
 
 class OutModel extends BaseNode {
-  type: graphNodeType= 'out';
+  // type: graphNodeType= 'out';
 
   value = null;
 

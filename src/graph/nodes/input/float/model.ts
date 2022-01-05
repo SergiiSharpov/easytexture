@@ -1,9 +1,9 @@
 import { makeAutoObservable } from 'mobx';
-import { graphNodeType } from '../../../';
+// import { graphNodeType } from '../../../';
 import BaseNode from '../../../baseNode';
 
 class FloatModel extends BaseNode {
-  type: graphNodeType= 'float';
+  // type: graphNodeType= 'float';
 
   value = makeAutoObservable( {
     value: 0.0,

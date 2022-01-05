@@ -1,12 +1,12 @@
 import { makeAutoObservable } from 'mobx';
-import { graphNodeType } from 'src/graph';
+// import { graphNodeType } from 'src/graph';
 import { Vector4 } from 'three';
 
 // import { GraphNodes } from '../../../const';
 import BaseNode from '../../../baseNode';
 
 class Vec4Model extends BaseNode {
-  type: graphNodeType= 'vec4';
+  // type: graphNodeType= 'vec4';
 
   value = makeAutoObservable( new Vector4() );
 
