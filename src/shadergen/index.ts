@@ -1,21 +1,25 @@
 // import crc32 from 'crc-32';
+import BaseNode from 'src/graph/baseNode';
+import { model, node } from 'src/graph/nodes/types';
+import Tree from 'src/store/tree';
+import Connection from 'src/store/tree/connection';
 import { getBaseMaterial } from '../utils/simpleShaderMaterial';
-
-
-Set.prototype.get = function( idx ) {
-  if( typeof idx !== 'number' ) {
-    throw new TypeError( `Argument idx must be a Number. Got [${ idx }]` );
-  }
-
-  let i = 0;
-  for( let iter = this.keys(), curs = iter.next(); !curs.done; curs = iter.next(), i++ ) {
-    if( idx === i ) {
-      return curs.value;
+class CustomSet extends Set {
+  get( idx: number ) {
+    if( typeof idx !== 'number' ) {
+      throw new TypeError( `Argument idx must be a Number. Got [${ idx }]` );
     }
-  }
 
-  throw new RangeError( `Index [${ idx }] is out of range [0-${ i - 1 }]` );
-};
+    let i = 0;
+    for( let iter = this.keys(), curs = iter.next(); !curs.done; curs = iter.next(), i++ ) {
+      if( idx === i ) {
+        return curs.value;
+      }
+    }
+
+    throw new RangeError( `Index [${ idx }] is out of range [0-${ i - 1 }]` );
+  }
+}
 
 
 const FragmentHeaderShader = ( `
@@ -24,7 +28,7 @@ precision mediump int;
 ` ).trim();
 
 const FragmentBeforeMainShader = ( `
-void main()	{
+void main() {
 ` ).trim();
 
 const FragmentAfterMainShader = ( `
@@ -33,43 +37,55 @@ const FragmentAfterMainShader = ( `
 
 
 export class ShaderGraph {
-  // inputNodes = {};
+  ordered: CustomSet;
+
+  private _processed:{
+    [key:string]: {
+      origin: model;
+      dependencies: CustomSet;
+    }
+  } = {};
+
+  dependencies: Connection[];
+
+  nodes: {[key: string]: model};
+
   constructor() {
-    // this.inputNodes = {};
     this.nodes = {};
     this.dependencies = [];
-    this.outNode = null;
-
     this._processed = {};
-    this.ordered = new Set();
+    this.ordered = new CustomSet();
   }
 
-  setOutNodeFromTree( tree ) {
+  setOutNodeFromTree( tree: ( model | Connection )[] ) {
     for ( let node of tree ) {
-      if ( node.constructor.type === 'out' ) {
-        this.outNode = node;
-        break;
+      if ( ( node.constructor as typeof BaseNode ).type === 'out' ) {
+        return node as model;
       }
     }
+
+    return null;
   }
 
-  processNode( node ) {
+  processNode( node: node ) {
     console.log( 'type', node.constructor.type );
     if ( !node.constructor.type ) {
-      this.dependencies.push( node );
+      this.dependencies.push( node as Connection );
 
       return false;
     }
 
-    this.nodes[ node.id ] = node;
+    this.nodes[ node.id ] = node as model;
 
     this._processed[ node.id ] = {
-      origin: node,
-      dependencies: new Set()
+      origin: node as model,
+      dependencies: new CustomSet()
     };
+
+    return true;
   }
 
-  getNodeById( id ) {
+  getNodeById( id: string ) {
     for ( let node of Object.values( this.nodes ) ) {
       if ( node.id === id ) {
         return node;
@@ -81,17 +97,17 @@ export class ShaderGraph {
 
   markDependent() {
     for ( let dep of this.dependencies ) {
-      if ( this._processed[ dep.target ] ) {
-        this._processed[ dep.target ].dependencies.add( dep.source );
+      if ( this._processed[ dep.target as string ] ) {
+        this._processed[ dep.target as string ].dependencies.add( dep.source );
       }
     }
   }
 
-  traverseReadyNodes( targetNode, nodesInPlace ) {
+  traverseReadyNodes( targetNode : model, nodesInPlace: CustomSet ) {
     let processed = 0;
 
     for ( let dependKey of this._processed[ targetNode.id ].dependencies ) {
-      processed += this.traverseReadyNodes( this.getNodeById( dependKey ), nodesInPlace );
+      processed += this.traverseReadyNodes( this.getNodeById( dependKey ) as model, nodesInPlace );
     }
 
     // Has no dependencies
@@ -100,25 +116,24 @@ export class ShaderGraph {
         nodesInPlace.add( targetNode.id );
         this.ordered.add( targetNode );
       }
-    } else {
-      // Check if dependencies in place
-      if ( targetNode.depsInPlace( nodesInPlace ) ) {
-        if ( !nodesInPlace.has( targetNode.id ) ) {
-          nodesInPlace.add( targetNode.id );
-          this.ordered.add( targetNode );
-        }
+    } else
+    // Check if dependencies in place
+    if ( targetNode.depsInPlace( nodesInPlace ) ) {
+      if ( !nodesInPlace.has( targetNode.id ) ) {
+        nodesInPlace.add( targetNode.id );
+        this.ordered.add( targetNode );
       }
     }
 
     return processed;
   }
 
-  reorder() {
-    const inPlace = new Set();
+  reorder( outNode: model ) {
+    const inPlace = new CustomSet();
 
-    let shouldTraverse = true;
+    let shouldTraverse = Boolean( outNode );
     while ( shouldTraverse ) {
-      const traverseResult = this.traverseReadyNodes( this.outNode, inPlace );
+      const traverseResult = this.traverseReadyNodes( outNode, inPlace );
 
       if ( traverseResult === 0 ) {
         console.log( 'Success!' );
@@ -134,17 +149,17 @@ export class ShaderGraph {
     return true;
   }
 
-  compileTree( tree ) {
+  compileElements( tree : ( model | Connection )[] ) {
     this.nodes = {};
     this.dependencies = [];
-    this.outNode = null;
+    // let outNode: model | null = null;
 
     this._processed = {};
     this.ordered.clear();
 
-    this.setOutNodeFromTree( tree );
-    if ( !this.outNode ) {
-      console.error( 'Graph doesn\'t has an output node' );
+    let outNode = this.setOutNodeFromTree( tree );
+    if ( !outNode ) {
+      console.error( 'Graph doesn\'t have an output node' );
 
       return false;
     }
@@ -152,8 +167,8 @@ export class ShaderGraph {
     // Get input nodes + get nodes flat object with names
     for ( let node of tree ) {
       this.processNode( node );
-      if ( node.constructor.type ) {
-        if ( !node.isValid() ) {
+      if ( ( node.constructor as typeof BaseNode ).type ) {
+        if ( !( node as model ).isValid() ) {
           console.log( 'Tree isn\'t valid' );
 
           return false;
@@ -163,10 +178,10 @@ export class ShaderGraph {
 
     this.markDependent();
 
-    return this.reorder( this.outNode );
+    return this.reorder( outNode );
   }
 
-  getNodeNameById( id ) {
+  getNodeNameById( id: string ) {
     for ( let node of Object.values( this.nodes ) ) {
       if ( node.id === id ) {
         return node.id;
@@ -176,9 +191,9 @@ export class ShaderGraph {
     return null;
   }
 
-  getNodeDepName( node, depIndex ) {
-    return this.getNodeNameById( this._processed[ node.id ].dependencies.get( depIndex ) );
-  }
+  // getNodeDepName( node, depIndex ) {
+  //   return this.getNodeNameById( this._processed[ node.id ].dependencies.get( depIndex ) );
+  // }
 
   getShaderInfo() {
     let info = {
@@ -206,36 +221,30 @@ export class ShaderGraph {
     return info;
   }
 
-  updateGraph( graph ) {
-    if ( this.compileTree( [...graph.children, ...graph.connections] ) ) {
+  updateTree( tree: Tree ) {
+    const material = getBaseMaterial();
+
+    if ( this.compileElements( [...tree.children, ...tree.connections] ) ) {
       const shaderInfo = this.getShaderInfo();
-
-      const material = getBaseMaterial();
-
       material.uniforms = shaderInfo.uniforms;
       material.fragmentShader = shaderInfo.fragmentShader;
-
       material.needsUpdate = true;
       material.uniformsNeedUpdate = true;
-
-      graph.material.set( material );
-    } else {
-      const material = getBaseMaterial();
-      graph.material.set( material );
     }
 
-    console.log( graph.material );
+    tree.material.set( material );
+    console.log( tree.material );
   }
 }
 
-const graph = new ShaderGraph();
+// const graph = new ShaderGraph();
 
-const compile = ( tree, material ) => {
-  graph.compileTree( tree );
-  let shaderInfo = graph.getShaderInfo();
+// const compile = ( tree, material ) => {
+//   graph.compileTree( tree );
+//   let shaderInfo = graph.getShaderInfo();
 
-  material.uniforms = shaderInfo.uniforms;
-  material.fragmentShader = shaderInfo.fragmentShader;
-};
+//   material.uniforms = shaderInfo.uniforms;
+//   material.fragmentShader = shaderInfo.fragmentShader;
+// };
 
-export default compile;
+// export default compile;

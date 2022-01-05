@@ -1,8 +1,11 @@
 import React, { useCallback } from 'react';
 import { observer } from 'mobx-react';
 import SliderInput from '../../../../components/SliderInput';
-
-const Vector4Input = observer( ( { target } ) => {
+import { Vector4 } from 'three';
+type IProps = {
+  target: Vector4
+}
+const Vector4Input = observer( ( { target }: IProps ) => {
   const updateX = useCallback( ( e ) => {
     target.setX( e );
   }, [target] );

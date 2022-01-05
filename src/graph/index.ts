@@ -14,4 +14,4 @@ NodeRegistry.registerNode( OutModel, OutView );
 // Export components views
 export const FlowComponentsMap = NodeRegistry.getViews();
 // Export components models
-export const FlowModelMap = NodeRegistry.getConstructors();
+export const FlowModelMap = NodeRegistry.getModels();

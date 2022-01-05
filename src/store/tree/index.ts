@@ -1,18 +1,19 @@
 import { makeObservable, observable, computed, action, makeAutoObservable } from 'mobx';
+import { model } from 'src/graph/nodes/types';
 import { RawShaderMaterial, Vector2 } from 'three';
 import { FlowModelMap } from '../../graph';
-import { GraphNodes } from '../../graph/const';
+import { GraphNodes, graphNodeType } from '../../graph/const';
 import { ShaderGraph } from '../../shadergen';
 import IDGenerator from '../../utils/idGenerator';
 import { getBaseMaterial } from '../../utils/simpleShaderMaterial';
-import Connection from './connection';
+import Connection, { _IConnectionProps } from './connection';
 
 class Tree {
-  children = [];
+  children : model[] = [];
 
   connections: Connection[] = [];
 
-  ids = {};
+  ids : {[key in graphNodeType] : IDGenerator};
 
   material = makeAutoObservable( {
     value: getBaseMaterial(),
@@ -41,11 +42,12 @@ class Tree {
       disconnect: action,
       onConnect: action
     } );
+    this.ids = {} as {[key in graphNodeType] : IDGenerator};
 
     this.createNode( GraphNodes.Out.type, {} );
   }
 
-  hasConnection( props ) {
+  hasConnection( props: _IConnectionProps ) {
     for ( let conn of this.connections ) {
       if ( conn.equals( props ) ) {
         return true;
@@ -55,7 +57,7 @@ class Tree {
     return false;
   }
 
-  getConnectionByTarget( props ) {
+  getConnectionByTarget( props: _IConnectionProps ) {
     for ( let conn of this.connections ) {
       if ( conn.target === props.target && conn.targetHandle === props.targetHandle ) {
         return conn;
@@ -65,7 +67,7 @@ class Tree {
     return null;
   }
 
-  onConnect = ( props ) => {
+  onConnect = ( props: _IConnectionProps ) => {
     if ( this.hasConnection( props ) ) {
       return false;
     }
@@ -76,26 +78,28 @@ class Tree {
     }
 
     this.connect( props );
+
+    return true;
     // this.connect(props.target, props.targetHandle || null, props.source, props.sourceHandle || null);
   }
 
   // target, targetHandle, source, sourceHandle
-  connect( props ) {
-    let connection = new Connection( props );
+  connect( props: _IConnectionProps ) {
+    const connection = new Connection( props );
     connection.id = `#c_${ props.target }${ props.targetHandle || '' }_${ props.source }${ props.sourceHandle || '' }`;
 
     this.connections.push( connection );
 
-    this.compiler.updateGraph( this );
+    this.compiler.updateTree( this );
   }
 
-  disconnect( connectionId ) {
+  disconnect( connectionId: string ) {
     this.connections = this.connections.filter( ( conn ) => ( conn.id !== connectionId ) );
 
-    this.compiler.updateGraph( this );
+    this.compiler.updateTree( this );
   }
 
-  createNode( nodeType, { x = 0, y = 0 } ) {
+  createNode( nodeType : graphNodeType, { x = 0, y = 0 } ) {
     console.log( FlowModelMap );
     if ( FlowModelMap[ nodeType ] ) {
       const NodeConstructor = FlowModelMap[ nodeType ];
@@ -104,15 +108,15 @@ class Tree {
         this.ids[ nodeType ] = new IDGenerator();
       }
 
-      let id = `${ nodeType }_${ this.ids[ nodeType ].next }`;
-      let node = new NodeConstructor( { id, position: new Vector2( x, y ) } );
+      const id = `${ nodeType }_${ this.ids[ nodeType ].next }`;
+      const node = new NodeConstructor( { id, position: new Vector2( x, y ) } );
       node.tree = this;
 
       this.children.push( node );
     }
   }
 
-  removeNode( type, id ) {
+  removeNode( type: graphNodeType, id: string ) {
     if ( type === GraphNodes.Out.type ) {
       return false;
     }
@@ -120,11 +124,13 @@ class Tree {
     this.children = this.children.filter( ( child ) => ( child.id !== id ) );
     this.connections = this.connections.filter( ( conn ) => ( conn.target !== id ) && ( conn.source !== id ) );
 
-    this.compiler.updateGraph( this );
+    this.compiler.updateTree( this );
+
+    return true;
   }
 
-  getConnected( id ) {
-    const inputs = {};
+  getConnected( id: string ) {
+    const inputs : {[key: string]: Connection } = {};
     for ( let conn of this.connections ) {
       if ( conn.source !== id ) {
         inputs[ conn.sourceHandle ] = conn;

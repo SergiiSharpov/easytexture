@@ -10,18 +10,18 @@ class OutModel extends BaseNode {
 
   static type = GraphNodes.Out.type;
 
-  depsInPlace( nodesInPlace ) {
+  depsInPlace( /* nodesInPlace*/ ) {
     return true;
   }
 
   getFragmentBody() {
-    let inputs = this.tree.getConnected( this.id );
+    const inputs = this.tree.getConnected( this.id );
 
     return `gl_FragColor = ${ inputs.value.source };`;
   }
 
   isValid() {
-    let inputs = this.tree.getConnected( this.id );
+    const inputs = this.tree.getConnected( this.id );
 
     return Boolean( inputs.value );
   }

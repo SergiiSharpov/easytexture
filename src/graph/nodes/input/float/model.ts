@@ -10,8 +10,13 @@ class FloatModel extends BaseNode {
     }
   } );
 
-  constructor( ...props ) {
-    super( ...props );
+  // constructor( ...props ) {
+  //   super( ...props );
+  // }
+  getFragmentHeader( uniforms ) {
+    uniforms[ this.id ] = this.value;
+
+    return `uniform ${ ( this.constructor as typeof FloatModel ).type } ${ this.id };\n`;
   }
 
   static type = GraphNodes.Float.type;

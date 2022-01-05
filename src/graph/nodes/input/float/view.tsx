@@ -4,7 +4,12 @@ import OutputLabelComponent from '../../../../components/Flow/nodes/labels/outpu
 import { GraphNodes } from '../../../const';
 import FloatInput from './FloatInput';
 type IProps = {
-  data : {value: number};
+  data : {
+    value: {
+      value: number;
+      set: ( v: number )=> void;
+    }
+  };
 }
 const FloatView = ( { data } : IProps ) => {
 

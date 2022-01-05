@@ -7,9 +7,9 @@ import BaseNode from '../../../baseNode';
 class Vec4Model extends BaseNode {
   value = makeAutoObservable( new Vector4() );
 
-  constructor( ...props ) {
-    super( ...props );
-  }
+  // constructor( ...props ) {
+  //   super( ...props );
+  // }
 
   static type = GraphNodes.Vector4.type;
 
@@ -18,7 +18,7 @@ class Vec4Model extends BaseNode {
 
     console.log( uniforms[ this.id ].value.x, uniforms[ this.id ].value.y, uniforms[ this.id ].value.z );
 
-    return `uniform ${ this.constructor.type } ${ this.id };\n`;
+    return `uniform ${ ( this.constructor as typeof Vec4Model ).type } ${ this.id };\n`;
   }
 }
 

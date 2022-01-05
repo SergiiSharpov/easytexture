@@ -1,4 +1,5 @@
-import { makeObservable, observable, computed, action } from 'mobx';
+import { makeObservable, observable, computed } from 'mobx';
+import Tree from 'src/store/tree';
 import { Vector2 } from 'three';
 
 class BaseNode {
@@ -8,12 +9,12 @@ class BaseNode {
 
   position = new Vector2();
 
-  value = null;
+  value: any;
 
   // Non observables
-  tree = null;
+  tree!: Tree;
 
-  accepts = new Set();
+  accepts = [new Set()];
 
   hasHeader = true;
 
@@ -38,7 +39,7 @@ class BaseNode {
     // console.log(this.constructor.type)
     return {
       id: this.id,
-      type: this.constructor.type,
+      type: ( this.constructor as typeof BaseNode ).type,
       data: { label: this.name, value: this.value },
       position: this.position,
       targetPosition: 'left',
