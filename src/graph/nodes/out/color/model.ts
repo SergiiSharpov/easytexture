@@ -1,16 +1,18 @@
-import { GraphNodes } from '../../../const';
+import { graphNodeType } from 'src/graph';
 import BaseNode from '../../../baseNode';
 
 class OutModel extends BaseNode {
+  type: graphNodeType= 'out';
+
   value = null;
 
-  constructor( ...props ) {
-    super( ...props );
-  }
+  // constructor( ...props ) {
+  //   super( ...props );
+  // }
 
-  static type = GraphNodes.Out.type;
+  // static type = GraphNodes.Out.type;
 
-  depsInPlace( /* nodesInPlace*/ ) {
+  isDepsPresent( /* nodesInPlace*/ ) {
     return true;
   }
 

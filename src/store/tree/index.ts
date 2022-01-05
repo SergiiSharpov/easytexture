@@ -1,15 +1,13 @@
 import { makeObservable, observable, computed, action, makeAutoObservable } from 'mobx';
-import { model } from 'src/graph/nodes/types';
 import { RawShaderMaterial, Vector2 } from 'three';
-import { FlowModelMap } from '../../graph';
-import { GraphNodes, graphNodeType } from '../../graph/const';
+import { Model, Models, graphNodeType } from '../../graph';
 import { ShaderGraph } from '../../shadergen';
 import IDGenerator from '../../utils/idGenerator';
 import { getBaseMaterial } from '../../utils/simpleShaderMaterial';
 import Connection, { _IConnectionProps } from './connection';
 
 class Tree {
-  children : model[] = [];
+  children : Model[] = [];
 
   connections: Connection[] = [];
 
@@ -44,7 +42,7 @@ class Tree {
     } );
     this.ids = {} as {[key in graphNodeType] : IDGenerator};
 
-    this.createNode( GraphNodes.Out.type, {} );
+    this.createNode( 'out', {} );
   }
 
   hasConnection( props: _IConnectionProps ) {
@@ -72,7 +70,7 @@ class Tree {
       return false;
     }
 
-    let connectionToDelete = this.getConnectionByTarget( props );
+    const connectionToDelete = this.getConnectionByTarget( props );
     if ( connectionToDelete ) {
       this.disconnect( connectionToDelete.id );
     }
@@ -100,16 +98,16 @@ class Tree {
   }
 
   createNode( nodeType : graphNodeType, { x = 0, y = 0 } ) {
-    console.log( FlowModelMap );
-    if ( FlowModelMap[ nodeType ] ) {
-      const NodeConstructor = FlowModelMap[ nodeType ];
+    console.log( Models );
+    if ( Models[ nodeType ] ) {
+      const NodeConstructor = Models[ nodeType ];
 
       if ( !this.ids[ nodeType ] ) {
         this.ids[ nodeType ] = new IDGenerator();
       }
 
       const id = `${ nodeType }_${ this.ids[ nodeType ].next }`;
-      const node = new NodeConstructor( { id, position: new Vector2( x, y ) } );
+      const node = new NodeConstructor( { id, position: new Vector2( x, y ), type: nodeType } );
       node.tree = this;
 
       this.children.push( node );
@@ -117,7 +115,7 @@ class Tree {
   }
 
   removeNode( type: graphNodeType, id: string ) {
-    if ( type === GraphNodes.Out.type ) {
+    if ( type === 'out' ) {
       return false;
     }
 

@@ -6,7 +6,7 @@ import InputBase from '@mui/material/InputBase';
 import IconButton from '@mui/material/IconButton';
 import SearchIcon from '@mui/icons-material/Search';
 
-import { GroupedGraphNodes } from '../../../graph/const';
+import { GroupedNodes } from '../../../graph';
 import PaneContextGroup from './PaneContextGroup';
 import Tree from 'src/store/tree';
 type IProps = {
@@ -93,9 +93,9 @@ const PaneContextMenu = ( { onClose, event = null, tree }: IProps ) => {
         </IconButton>
       </div>
       <div className='context-elements'>
-        {Object.keys( GroupedGraphNodes ).map( ( name ) => {
+        {Object.keys( GroupedNodes ).map( ( name ) => {
           if ( itemFilter ) {
-            const groupHasFiltered = GroupedGraphNodes[ name ]
+            const groupHasFiltered = GroupedNodes[ name ]
               .filter( ( { name } ) => ( name.indexOf( itemFilter ) !== -1 ) ).length;
             if ( !groupHasFiltered ) {
               return null;
@@ -105,7 +105,7 @@ const PaneContextMenu = ( { onClose, event = null, tree }: IProps ) => {
           return (
             <PaneContextGroup
               key={ name }
-              group={ GroupedGraphNodes[ name ] }
+              group={ GroupedNodes[ name ] }
               name={ name }
               filter={ itemFilter }
               onCreate={ onCreate }

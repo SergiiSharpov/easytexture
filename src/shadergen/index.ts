@@ -1,6 +1,6 @@
 // import crc32 from 'crc-32';
-import BaseNode from 'src/graph/baseNode';
-import { model, node } from 'src/graph/nodes/types';
+// import BaseNode from 'src/graph/baseNode';
+import { Model } from 'src/graph';
 import Tree from 'src/store/tree';
 import Connection from 'src/store/tree/connection';
 import { getBaseMaterial } from '../utils/simpleShaderMaterial';
@@ -41,14 +41,14 @@ export class ShaderGraph {
 
   private _processed:{
     [key:string]: {
-      origin: model;
+      origin: Model;
       dependencies: CustomSet;
     }
   } = {};
 
   dependencies: Connection[];
 
-  nodes: {[key: string]: model};
+  nodes: {[key: string]: Model};
 
   constructor() {
     this.nodes = {};
@@ -57,28 +57,28 @@ export class ShaderGraph {
     this.ordered = new CustomSet();
   }
 
-  setOutNodeFromTree( tree: ( model | Connection )[] ) {
+  setOutNodeFromTree( tree: ( Model | Connection )[] ) {
     for ( let node of tree ) {
-      if ( ( node.constructor as typeof BaseNode ).type === 'out' ) {
-        return node as model;
+      if ( ( node as Model ).type === 'out' ) {
+        return node as Model;
       }
     }
 
     return null;
   }
 
-  processNode( node: node ) {
-    console.log( 'type', node.constructor.type );
-    if ( !node.constructor.type ) {
+  processNode( node: Model | Connection ) {
+    console.log( 'type', ( node as Model ).type );
+    if ( !( node as Model ).type ) {
       this.dependencies.push( node as Connection );
 
       return false;
     }
 
-    this.nodes[ node.id ] = node as model;
+    this.nodes[ node.id ] = node as Model;
 
     this._processed[ node.id ] = {
-      origin: node as model,
+      origin: node as Model,
       dependencies: new CustomSet()
     };
 
@@ -103,11 +103,11 @@ export class ShaderGraph {
     }
   }
 
-  traverseReadyNodes( targetNode : model, nodesInPlace: CustomSet ) {
+  traverseReadyNodes( targetNode : Model, nodesInPlace: CustomSet ) {
     let processed = 0;
 
     for ( let dependKey of this._processed[ targetNode.id ].dependencies ) {
-      processed += this.traverseReadyNodes( this.getNodeById( dependKey ) as model, nodesInPlace );
+      processed += this.traverseReadyNodes( this.getNodeById( dependKey ) as Model, nodesInPlace );
     }
 
     // Has no dependencies
@@ -118,7 +118,7 @@ export class ShaderGraph {
       }
     } else
     // Check if dependencies in place
-    if ( targetNode.depsInPlace( nodesInPlace ) ) {
+    if ( targetNode.isDepsPresent( nodesInPlace ) ) {
       if ( !nodesInPlace.has( targetNode.id ) ) {
         nodesInPlace.add( targetNode.id );
         this.ordered.add( targetNode );
@@ -128,7 +128,7 @@ export class ShaderGraph {
     return processed;
   }
 
-  reorder( outNode: model ) {
+  reorder( outNode: Model ) {
     const inPlace = new CustomSet();
 
     let shouldTraverse = Boolean( outNode );
@@ -149,7 +149,7 @@ export class ShaderGraph {
     return true;
   }
 
-  compileElements( tree : ( model | Connection )[] ) {
+  compileElements( tree : ( Model | Connection )[] ) {
     this.nodes = {};
     this.dependencies = [];
     // let outNode: model | null = null;
@@ -167,8 +167,8 @@ export class ShaderGraph {
     // Get input nodes + get nodes flat object with names
     for ( let node of tree ) {
       this.processNode( node );
-      if ( ( node.constructor as typeof BaseNode ).type ) {
-        if ( !( node as model ).isValid() ) {
+      if ( ( node as Model ).type ) {
+        if ( !( node as Model ).isValid( ) ) {
           console.log( 'Tree isn\'t valid' );
 
           return false;

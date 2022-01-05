@@ -1,11 +1,25 @@
 import { makeObservable, observable, computed } from 'mobx';
 import Tree from 'src/store/tree';
 import { Vector2 } from 'three';
+import { graphNodeType } from '.';
 
-class BaseNode {
+type IProps = {
+  position: Vector2;
+  id: string;
+  type: graphNodeType;
+}
+
+interface IShaderMethods {
+  getFragmentHeader: ( uniforms: any )=> string;
+  getFragmentBody: ( graph: any )=> string;
+}
+class BaseNode
+implements IShaderMethods {
   // Observables
   // name = '';
   id = '';
+
+  type: graphNodeType;
 
   position = new Vector2();
 
@@ -20,26 +34,27 @@ class BaseNode {
 
   hasBody = true;
 
-  constructor( { position = { x: 0, y: 0 }, id = '' } ) {
+  constructor( { position = new Vector2(), id = '', type }: IProps ) {
     makeObservable( this, {
       // name: observable,
       id: observable,
       flat: computed
     } );
 
-    this.type = this.constructor.type;
+    // this.type = this.constructor.type;
 
     this.position.set( position.x, position.y );
     this.id = id;
+    this.type = type;
   }
 
-  static type = 'Node';
+  // static type = 'Node';
 
   get flat() {
     // console.log(this.constructor.type)
     return {
       id: this.id,
-      type: ( this.constructor as typeof BaseNode ).type,
+      type: this.type,
       data: { label: this.name, value: this.value },
       position: this.position,
       targetPosition: 'left',
@@ -60,7 +75,7 @@ class BaseNode {
     return true;
   }
 
-  depsInPlace( nodesInPlace ) {
+  isDepsPresent( nodesInPlace ) {
     return true;
   }
 }

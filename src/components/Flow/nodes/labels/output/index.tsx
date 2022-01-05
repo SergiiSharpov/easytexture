@@ -1,6 +1,6 @@
 import React from 'react';
 import { Handle } from 'react-flow-renderer';
-import { graphNodeType } from 'src/graph/const';
+import { graphNodeType } from 'src/graph';
 type IProps = {
   id: string;
   label: string | JSX.Element;
