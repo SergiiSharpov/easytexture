@@ -1,3 +1,4 @@
+/* eslint-disable no-sync */
 import path from 'path';
 import fs from 'fs';
 import { remote } from 'electron';
@@ -6,18 +7,24 @@ import { makeObservable, observable, computed, action, makeAutoObservable } from
 const { dialog, getCurrentWindow } = remote;
 
 class Project {
-  directory = '';// Directory, if empty then isn't saved yet
+  // Directory, if empty then isn't saved yet
+  directory = '';
 
-  name = '';// Poject name, if empty then isn't saved yet
+  // Poject name, if empty then isn't saved yet
+  name = '';
 
-  images = [];// Images
+  // Images
+  images = [];
 
-  maps = [];// Shader maps
+  // Shader maps
+  maps = [];
 
   toJSON() {
     return {
-      images: this.images, // There should be each image toJSON
-      maps: this.maps// There should be each shader tree toJSON
+      // There should be each image toJSON
+      images: this.images,
+      // There should be each shader tree toJSON
+      maps: this.maps
     };
   }
 
@@ -40,10 +47,31 @@ class Project {
       );
 
       if ( resultPath ) {
-        const parsed = path.parse( resultPath );
+        const exists = fs.existsSync( resultPath );
 
-        this.directory = parsed.dir;
-        this.name = parsed.name;
+        if ( exists ) {
+          const parsed = path.parse( resultPath );
+
+          this.directory = parsed.dir;
+          this.name = parsed.name;
+        } else {
+          const parsed = path.parse( resultPath );
+
+          const nextDir = path.join( parsed.dir, parsed.name );
+
+          // Check if dir not exists
+          if ( fs.existsSync( nextDir ) ) {
+            console.log( 'Dir already exists' );
+
+            return false;
+          }
+
+          fs.mkdirSync( nextDir );
+
+
+          this.directory = nextDir;
+          this.name = parsed.name;
+        }
       } else {
         return false;
       }
