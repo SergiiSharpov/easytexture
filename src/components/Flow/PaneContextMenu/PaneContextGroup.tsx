@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import Accordion from '@mui/material/Accordion';
 import AccordionDetails from '@mui/material/AccordionDetails';
 import AccordionSummary from '@mui/material/AccordionSummary';
@@ -7,9 +7,9 @@ import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemText from '@mui/material/ListItemText';
-import { graphNode, graphNodeType } from '../../../graph/const';
+import { nodeData, graphNodeType } from 'graph';
 type IProps = {
-  group: graphNode[];
+  group: nodeData[];
   name: string;
   filter: any; /* @TODO replace to correct type here */
   onCreate: ( type: graphNodeType ) => void;

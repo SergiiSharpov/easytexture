@@ -1,6 +1,5 @@
 import { makeAutoObservable } from 'mobx';
-import { GraphNodes } from '../../../const';
-import BaseNode from '../../../baseNode';
+import BaseNode from 'graph/baseNode';
 
 class FloatModel extends BaseNode {
   value = makeAutoObservable( {
@@ -10,11 +9,11 @@ class FloatModel extends BaseNode {
     }
   } );
 
-  constructor( ...props ) {
-    super( ...props );
-  }
+  getFragmentHeader( uniforms ) {
+    uniforms[ this.id ] = this.value;
 
-  static type = GraphNodes.Float.type;
+    return `uniform ${ this.type } ${ this.id };\n`;
+  }
 }
 
 export default FloatModel;

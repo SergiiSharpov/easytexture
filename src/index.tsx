@@ -1,8 +1,8 @@
 import React from 'react';
 import { remote } from 'electron';
 import { render } from 'react-dom';
-import App from './components/App';
-import Env from './store/env';
+import App from 'components/App';
+import Env from 'store/env';
 
 // Set app menu
 import { AppMenu } from './store/applicationMenu';

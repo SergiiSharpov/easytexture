@@ -1,17 +1,25 @@
 import { makeObservable, observable, computed } from 'mobx';
 
+export type _IConnectionProps = {
+  target : string | null;
+  targetHandle: string | null;
+  source : string;
+  sourceHandle: string;
+}
 class Connection {
+  isConnection = true;
+
   id = '';
 
-  target = null;
+  target: _IConnectionProps['target'];
 
-  targetHandle = null;
+  targetHandle: _IConnectionProps['targetHandle'];
 
-  source = null;
+  source: _IConnectionProps['source'];
 
-  sourceHandle = null;
+  sourceHandle: _IConnectionProps['sourceHandle'];
 
-  constructor( { target = null, targetHandle = null, source = null, sourceHandle = null } ) {
+  constructor( { target = null, targetHandle = null, source = '', sourceHandle = '' }: _IConnectionProps ) {
     makeObservable( this, {
       source: observable,
       sourceHandle: observable,
@@ -27,7 +35,7 @@ class Connection {
     this.sourceHandle = sourceHandle;
   }
 
-  equals( props ) {
+  equals( props : _IConnectionProps ) {
     return (
       props.target === this.target &&
       props.targetHandle === this.targetHandle &&

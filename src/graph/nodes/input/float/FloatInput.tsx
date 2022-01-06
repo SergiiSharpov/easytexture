@@ -1,8 +1,13 @@
 import React, { useCallback } from 'react';
 import { observer } from 'mobx-react';
-import SliderInput from '../../../../components/SliderInput';
-
-const FloatInput = observer( ( { target } ) => {
+import SliderInput from 'components/SliderInput';
+type IProps = {
+  target: {
+    value: number;
+    set: ( t: number )=> void;
+  };
+}
+const FloatInput = observer( ( { target } : IProps ) => {
   const update = useCallback( ( e ) => {
     target.set( e );
   }, [target] );

@@ -21,6 +21,8 @@ module.exports = {
   ],
   parser: '@typescript-eslint/parser',
   rules: {
+    'import/no-unresolved': 0,
+    'import/extensions': 0,
     '@typescript-eslint/naming-convention': 'off',
     '@typescript-eslint/explicit-module-boundary-types': 0,
     '@typescript-eslint/no-var-requires': 0,
@@ -365,8 +367,7 @@ module.exports = {
           '.tsx'
         ]
       },
-      webpack: { config: 'webpack.dev.config.js' },
-      typescript: {}
+      webpack: { config: 'webpack.dev.config.js' }
     },
     react: { version: 'detect' }
   }

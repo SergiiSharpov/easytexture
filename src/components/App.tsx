@@ -8,10 +8,9 @@ import 'react-toastify/dist/ReactToastify.css';
 
 import { createTheme, ThemeProvider } from '@mui/material';
 
-import Tree from '../store/tree';
+import Tree from 'store/tree';
 import Project from 'src/containers/Project';
 import Workspace from 'src/containers/Workspace';
-
 
 const darkTheme = createTheme( { palette: { mode: 'dark' } } );
 

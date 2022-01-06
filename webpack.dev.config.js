@@ -23,7 +23,7 @@ module.exports = {
           {
             loader: 'babel-loader',
             options: {
-              compact: true,
+              compact: false,
               cacheDirectory: true,
               presets: [
                 '@babel/preset-env',
@@ -61,14 +61,22 @@ module.exports = {
       '.ts',
       '.tsx'
     ],
-    alias: { src: path.resolve( __dirname, 'src' ) }
+    alias: {
+      src: path.resolve( __dirname, 'src' ),
+      assets: path.resolve( __dirname, 'src', 'assets' ),
+      components: path.resolve( __dirname, 'src', 'components' ),
+      graph: path.resolve( __dirname, 'src', 'graph' ),
+      store: path.resolve( __dirname, 'src', 'store' ),
+      utils: path.resolve( __dirname, 'src', 'utils' )
+    }
   },
   plugins: [new HtmlWebpackPlugin(), new webpack.DefinePlugin( { 'process.env.NODE_ENV': JSON.stringify( 'development' ) } )],
-  devtool: 'cheap-source-map',
+  optimization: { minimize: false },
+  devtool: 'eval-source-map',
   devServer: {
-    devMiddleware: {
-      // publicPath: path.resolve(__dirname, 'dist'),
-    },
+    // devMiddleware: {
+    //   // publicPath: path.resolve(__dirname, 'dist'),
+    // },
     // contentBase: path.resolve(__dirname, 'dist'),
     // stats: {
     //   colors: true,

@@ -1,27 +1,20 @@
-import { GraphNodes } from '../../../const';
-import BaseNode from '../../../baseNode';
+import BaseNode from 'graph/baseNode';
 
 class OutModel extends BaseNode {
   value = null;
 
-  constructor( ...props ) {
-    super( ...props );
-  }
-
-  static type = GraphNodes.Out.type;
-
-  depsInPlace( nodesInPlace ) {
+  isDepsPresent( /* nodesInPlace*/ ) {
     return true;
   }
 
   getFragmentBody() {
-    let inputs = this.tree.getConnected( this.id );
+    const inputs = this.tree.getNodeConnections( this.id );
 
     return `gl_FragColor = ${ inputs.value.source };`;
   }
 
   isValid() {
-    let inputs = this.tree.getConnected( this.id );
+    const inputs = this.tree.getNodeConnections( this.id );
 
     return Boolean( inputs.value );
   }
