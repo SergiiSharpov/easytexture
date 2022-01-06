@@ -1,8 +1,10 @@
 import React from 'react';
 import { observer } from 'mobx-react';
+import { ToastContainer } from 'react-toastify';
 
 import '../assets/css/App.css';
 import '../assets/fonts/roboto/index.css';
+import 'react-toastify/dist/ReactToastify.css';
 
 import { createTheme, ThemeProvider } from '@mui/material';
 
@@ -27,6 +29,17 @@ const App = observer( ( { env } ) => {
             : <Workspace env={ env }/>
         }
 
+        <ToastContainer
+          position='top-right'
+          autoClose={ 5000 }
+          hideProgressBar={ false }
+          newestOnTop={ false }
+          closeOnClick
+          rtl={ false }
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+        />
       </div>
     </ThemeProvider>
   );

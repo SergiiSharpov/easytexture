@@ -2,6 +2,7 @@ import path from 'path';
 import { existsSync, statSync, readFileSync } from 'fs';
 import { remote } from 'electron';
 import { makeObservable, observable, computed, action, makeAutoObservable } from 'mobx';
+import { toast } from 'react-toastify';
 import Project from './project';
 
 
@@ -77,7 +78,7 @@ class Env {
     }
   }
 
-  hasSavedProject( project : Project ) {
+  hasSavedProject( project : ListedProject ) {
     for ( let listed of this.projectsList ) {
       if ( listed.name === project.name && listed.directory === project.directory ) {
         return true;
@@ -94,7 +95,7 @@ class Env {
     this.targetProject = project;
   }
 
-  open = ( listed ) => {
+  open = ( listed : ListedProject ) => {
     const filePath = path.join( listed.directory, `${ listed.name }.easytexture` );
 
     const available = existsSync( filePath );
@@ -117,7 +118,7 @@ class Env {
         return false;
       }
 
-      this.save();
+      this.save( false );
 
       this.saveProjectsToMemory();
       this.updateListedProjects();
@@ -132,6 +133,7 @@ class Env {
   }
 
   openFromFile = () => {
+    // eslint-disable-next-line no-sync
     const resultPath = dialog.showOpenDialogSync(
       getCurrentWindow(), { title: 'Open project', filters: [{ name: 'easy file', extensions: ['easytexture'] }] }
     );
@@ -171,7 +173,7 @@ class Env {
   }
 
   // Saves opened project
-  save = async () => {
+  save = async ( notify = true ) => {
     if ( this.targetProject === null ) {
       return false;
     }
@@ -193,6 +195,18 @@ class Env {
         this.updateListedProjects();
 
         console.log( 'Project saved' );
+        if ( notify ) {
+          toast.success( 'Saved', {
+            position: 'top-right',
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: 'dark'
+          } );
+        }
       } else {
         console.log( 'Saving canceled' );
       }
