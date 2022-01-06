@@ -127,6 +127,16 @@ class Env {
     }
 
     listed.fileExist = false;
+    toast.error( 'Project seems to be broken', {
+      position: 'top-right',
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: 'dark'
+    } );
 
 
     return false;
@@ -211,7 +221,16 @@ class Env {
         console.log( 'Saving canceled' );
       }
     } catch ( e ) {
-      console.log( 'Saving error happened' );
+      toast.error( 'Saving error happened', {
+        position: 'top-right',
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: 'dark'
+      } );
 
       return false;
     }
