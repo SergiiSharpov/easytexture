@@ -87,7 +87,7 @@ const ProjectsListOld = observer( () => {
 const ProjectsList = observer( ( { env } ) => {
 
   return env.projectsList.map( ( project ) => {
-    const modified = project.lastUpdate ? moment( project.lastUpdate ).fromNow() : 'Project doesn\'t exists';
+    const modified = project.fileExist ? moment( project.lastUpdate ).fromNow() : 'Project doesn\'t exists';
 
     return (
       <ListItem
@@ -108,7 +108,7 @@ const ProjectsList = observer( ( { env } ) => {
         >
           <ListItemAvatar>
             <Avatar>
-              {project.lastUpdate ? <FolderIcon /> : <FolderOffIcon/>}
+              {project.fileExist ? <FolderIcon /> : <FolderOffIcon/>}
             </Avatar>
           </ListItemAvatar>
           <ListItemText primary={ project.name } secondary={ modified } />
