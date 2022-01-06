@@ -125,6 +125,9 @@ class Env {
       return true;
     }
 
+    listed.fileExist = false;
+
+
     return false;
   }
 
