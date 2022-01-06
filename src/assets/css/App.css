@@ -1,25 +1,62 @@
 /* Main CSS file */
 
 @import '_example/_example.css';
+/* @import '../fonts/roboto/index.css'; */
+/* @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@100&display=swap'); */
 
 body {
   color: #fff;
   margin: 0;
+  font-family: "Roboto";
 }
 
 ::-webkit-scrollbar {
-  width: 8px;               /* width of the entire scrollbar */
+  width: 6px;
 }
+
+/* ::-webkit-scrollbar {
+  width: 8px;
+} */
 
 ::-webkit-scrollbar-track {
-  background: #343434;        /* color of the tracking area */
+  background: #101010;        /* color of the tracking area */
 }
 
+/* ::-webkit-scrollbar-track {
+  background: #343434;
+} */
+
 ::-webkit-scrollbar-thumb {
-  background-color: #000;    /* color of the scroll thumb */
-  /* border-radius: 20px; */
-  /* border: 3px solid orange; */
+  background-color: #323232;
+  /* #2196f3 */
+  /* border: 1px solid #343434; */
+}
+
+/* ::-webkit-scrollbar-thumb {
+  background-color: #000;
   border: 1px solid #343434;
+} */
+
+/* *, *::before, *::after {
+  box-sizing: inherit;
+} */
+
+.transition {
+  /* box-sizing: inherit; */
+  position: fixed;
+  width: 100%;
+  /* display: block; */
+}
+
+.empty-project-container {
+  font-size: 24px;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #646464;
+  font-weight: 300;
 }
 
 .flow-container {
@@ -35,16 +72,20 @@ body {
 
 .react-flow__controls-button {
   fill: #ffffff;
-  background: #121212;
+  background: #121212!important;
 }
 
 .react-flow__controls-button:hover {
-  background: #232323;
+  background: #232323!important;
 }
 
 .app-container {
   width: 100vw;
   height: 100vh;
+
+  overflow: hidden;
+
+  /* background: #121212; */
 }
 
 .project-container {
@@ -447,5 +488,85 @@ body {
   padding-left: 16px;
 }
 
+
+
+
+
+
+
+
+
+
+
+.workspace {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100vw;
+  height: 100vh;
+
+  /* background: #000; */
+  /* position: relative; */
+}
+
+.workspace-panel {
+  min-width: 512px;
+  min-height: 386px;
+
+  /* padding: 24px; */
+
+  border: solid 1px transparent;
+  position: relative;
+
+  box-sizing: border-box;
+
+
+  font-size: 48px;
+  font-weight: 100;
+  font-family: 'Roboto';
+}
+
+.workspace-panel:before {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: -1;
+  margin: -2px;
+  /* !importanté */
+  border-radius: inherit;
+  /* !importanté */
+  background: linear-gradient(135deg, #2196f3, #e91e63);
+}
+
+
+.workspace-header {
+  text-align: center;
+  padding-top: 24px;
+
+  /* box-sizing: border-box; */
+  /* height: 96px; */
+}
+
+.projects-list {
+  width: 100%;
+
+  height: 232px;
+  overflow: auto;
+}
+
+.projects-buttons {
+  display: flex;
+  padding: 16px 8px;
+  width: 100%;
+}
+
+.projects-buttons button {
+  /* background: #2196f3; */
+  color: #eee;
+  width: 100%;
+}
 
 

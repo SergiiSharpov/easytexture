@@ -48,7 +48,8 @@ module.exports = {
       },
       {
         test: /\.(eot|svg|ttf|woff|woff2)$/,
-        use: [{ loader: 'file-loader?name=font/[name]__[hash:base64:5].[ext]' }]
+        type: 'asset/resource'
+        // use: [{ loader: 'file-loader?name=font/[name]__[hash:base64:5].[ext]' }]
         // include: defaultInclude
       }
     ]
