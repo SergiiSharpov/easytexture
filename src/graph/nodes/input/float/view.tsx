@@ -1,7 +1,7 @@
 import React from 'react';
 import { Nodes } from 'src/graph';
-import Node from '../../../../components/Flow/nodes/core/node';
-import OutputLabelComponent from '../../../../components/Flow/nodes/labels/output';
+import Node from 'components/Flow/nodes/core/node';
+import OutputLabelComponent from 'components/Flow/nodes/labels/output';
 import FloatInput from './FloatInput';
 type IProps = {
   data : {

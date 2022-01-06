@@ -7,7 +7,7 @@ import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemText from '@mui/material/ListItemText';
-import { nodeData, graphNodeType } from '../../../graph';
+import { nodeData, graphNodeType } from 'graph';
 type IProps = {
   group: nodeData[];
   name: string;

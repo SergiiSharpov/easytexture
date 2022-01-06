@@ -28,7 +28,18 @@
     "resolveJsonModule": true,
     "lib": ["ES2020", "dom", "DOM.Iterable", "ScriptHost"],
     "paths": {
-      "src/*": ["src/*"]
+      "src/*": ["src/*"],
+      "src": ["src"],
+      "assets/*": ["src/assets/*"],
+      "assets": ["src/assets"],
+      "components/*": ["src/components/*"],
+      "components": ["src/components"],
+      "graph/*": ["src/graph/*"],
+      "graph": ["src/graph"],
+      "store/*": ["src/store/*"],
+      "store": ["src/store"],
+      "utils/*": ["src/utils/*"],
+      "utils": ["src/utils"]
     },
     "watch": true
   },

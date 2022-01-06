@@ -1,5 +1,5 @@
 import { makeObservable, observable, computed } from 'mobx';
-import Tree from 'src/store/tree';
+import Tree from 'store/tree';
 import { Vector2 } from 'three';
 import { graphNodeType } from '.';
 
@@ -10,8 +10,8 @@ type IProps = {
 }
 
 interface IShaderMethods {
-  getFragmentHeader: ( uniforms: any )=> string;
-  getFragmentBody: ( graph: any )=> string;
+  getFragmentHeader: ( uniforms: object )=> string;
+  getFragmentBody: ( /* graph: any*/ )=> string;
 }
 class BaseNode
 implements IShaderMethods {
@@ -63,15 +63,15 @@ implements IShaderMethods {
     };
   }
 
-  getFragmentHeader( uniforms = {} ) {
+  getFragmentHeader( uniforms: object ) {
     return '';
   }
 
-  getFragmentBody( graph ) {
+  getFragmentBody( /* graph*/ ) {
     return '';
   }
 
-  isValid( graph ) {
+  isValid() {
     return true;
   }
 

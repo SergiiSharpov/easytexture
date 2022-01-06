@@ -10,13 +10,11 @@ import 'react-flow-renderer/dist/style.css';
 // import 'react-flow-renderer/dist/theme-default.css';
 
 
-import bgImage from './../../assets/images/prototype/dark/texture_08.png';
-// import compile from '../../shadergen';
-// import simpleShaderMaterial from '../../store/simpleShaderMaterial';
+import bgImage from 'assets/images/prototype/dark/texture_08.png';
 
-import { Views } from '../../graph';
+import { Views } from 'graph';
 import PaneContextMenu from './PaneContextMenu';
-import Tree from 'src/store/tree';
+import Tree from 'store/tree';
 
 
 // compile(elements, simpleShaderMaterial);

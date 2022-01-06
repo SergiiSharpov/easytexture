@@ -1,6 +1,6 @@
 import React, { useCallback } from 'react';
 import { observer } from 'mobx-react';
-import SliderInput from '../../../../components/SliderInput';
+import SliderInput from 'components/SliderInput';
 import { Vector4 } from 'three';
 type IProps = {
   target: Vector4

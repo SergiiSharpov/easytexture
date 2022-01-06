@@ -1,12 +1,12 @@
 import React from 'react';
 import List from '@mui/material/List';
 import Map from './Map';
-import diffuseMap from './../../assets/images/preview/diffuse.jpg';
-import aoMap from './../../assets/images/preview/ao.jpg';
-import normalMap from './../../assets/images/preview/normal.jpg';
-import heightMap from './../../assets/images/preview/height.jpg';
-import metallicMap from './../../assets/images/preview/metallic.jpg';
-import roughnessMap from './../../assets/images/preview/smoothness.jpg';
+import diffuseMap from 'assets/images/preview/diffuse.jpg';
+import aoMap from 'assets/images/preview/ao.jpg';
+import normalMap from 'assets/images/preview/normal.jpg';
+import heightMap from 'assets/images/preview/height.jpg';
+import metallicMap from 'assets/images/preview/metallic.jpg';
+import roughnessMap from 'assets/images/preview/smoothness.jpg';
 
 // background.paper
 const MapList = () => {

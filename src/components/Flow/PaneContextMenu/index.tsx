@@ -6,9 +6,9 @@ import InputBase from '@mui/material/InputBase';
 import IconButton from '@mui/material/IconButton';
 import SearchIcon from '@mui/icons-material/Search';
 
-import { GroupedNodes } from '../../../graph';
+import { GroupedNodes } from 'graph';
 import PaneContextGroup from './PaneContextGroup';
-import Tree from 'src/store/tree';
+import Tree from 'store/tree';
 type IProps = {
   tree: Tree;
   event: any; /* @TODO replace to correct type here */

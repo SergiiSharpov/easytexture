@@ -61,7 +61,14 @@ module.exports = {
       '.ts',
       '.tsx'
     ],
-    alias: { src: path.resolve( __dirname, 'src' ) }
+    alias: {
+      src: path.resolve( __dirname, 'src/' ),
+      assets: path.resolve( __dirname, '/src/assets/' ),
+      components: path.resolve( __dirname, '/src/components/' ),
+      graph: path.resolve( __dirname, '/src/graph/' ),
+      store: path.resolve( __dirname, '/src/store/' ),
+      utils: path.resolve( __dirname, '/src/utils/' )
+    }
   },
   plugins: [
     new HtmlWebpackPlugin(),

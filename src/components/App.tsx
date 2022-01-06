@@ -3,7 +3,7 @@ import React from 'react';
 import Flow from './Flow';
 import MapList from './MapList';
 
-import '../assets/css/App.css';
+import 'assets/css/App.css';
 
 import CssBaseline from '@mui/material/CssBaseline';
 import Box from '@mui/material/Box';
@@ -14,7 +14,7 @@ import ButtonBase from '@mui/material/ButtonBase';
 
 import { createTheme, ThemeProvider } from '@mui/material';
 import Preview from './Preview';
-import Tree from '../store/tree';
+import Tree from 'store/tree';
 // import { Vector2 } from 'three';
 
 

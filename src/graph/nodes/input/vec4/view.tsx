@@ -1,11 +1,12 @@
 import React from 'react';
 import { Nodes } from 'src/graph';
-import Node from '../../../../components/Flow/nodes/core/node';
-import OutputLabelComponent from '../../../../components/Flow/nodes/labels/output';
+import Node from 'components/Flow/nodes/core/node';
+import OutputLabelComponent from 'components/Flow/nodes/labels/output';
 import Vector4Input from './Vector4Input';
+import { Vector4 } from 'three';
 type IProps = {
   data: {
-    value : number;
+    value : Vector4;
   }
 }
 

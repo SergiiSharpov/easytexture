@@ -1,20 +1,9 @@
 import { makeAutoObservable } from 'mobx';
-// import { graphNodeType } from 'src/graph';
 import { Vector4 } from 'three';
-
-// import { GraphNodes } from '../../../const';
-import BaseNode from '../../../baseNode';
+import BaseNode from 'graph/baseNode';
 
 class Vec4Model extends BaseNode {
-  // type: graphNodeType= 'vec4';
-
   value = makeAutoObservable( new Vector4() );
-
-  // constructor( ...props ) {
-  //   super( ...props );
-  // }
-
-  // static type = GraphNodes.Vector4.type;
 
   getFragmentHeader( uniforms ) {
     uniforms[ this.id ] = { value: this.value };
