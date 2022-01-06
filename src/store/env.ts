@@ -117,6 +117,11 @@ class Env {
         return false;
       }
 
+      this.save();
+
+      this.saveProjectsToMemory();
+      this.updateListedProjects();
+
       return true;
     }
 
@@ -143,10 +148,6 @@ class Env {
       }
 
       this.open( listed );
-      this.save();
-
-      this.saveProjectsToMemory();
-      this.updateListedProjects();
 
       return true;
     }
