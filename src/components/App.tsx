@@ -8,13 +8,11 @@ import 'react-toastify/dist/ReactToastify.css';
 
 import { createTheme, ThemeProvider } from '@mui/material';
 
-import Tree from 'store/tree';
-import Project from 'src/containers/Project';
 import Workspace from 'src/containers/Workspace';
+import ProjectsView from 'src/containers/ProjectsView';
 
 const darkTheme = createTheme( { palette: { mode: 'dark' } } );
 
-const tree = new Tree();
 
 const App = observer( ( { env } ) => {
 
@@ -24,7 +22,7 @@ const App = observer( ( { env } ) => {
 
         {
           env.targetProject
-            ? <Project tree={ tree } />
+            ? <ProjectsView env={ env }/>
             : <Workspace env={ env }/>
         }
 

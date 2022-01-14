@@ -13,7 +13,7 @@ import Preview from '../../components/Preview';
 const Project = ( { tree } ) => {
 
   return (
-    <div>
+    <div className='project'>
       <CssBaseline />
       <Container
         disableGutters={ true }
@@ -22,12 +22,8 @@ const Project = ( { tree } ) => {
         className='project-container'
       >
         <Box component = 'div' sx={ { width: 300, flexGrow: 0, flexShrink: 0 } } className='menu-container'>
-          <div className='texture-preview-container'>
-            <ButtonBase>
-              <div className='texture-preview'>Preview</div>
-            </ButtonBase>
-          </div>
-          <MapList/>
+
+          {/* <MapList/> */}
         </Box>
         <Container
           disableGutters={ true }

@@ -1,8 +1,9 @@
 /* eslint-disable no-sync */
 import path from 'path';
 import fs from 'fs';
+import { v4 as uuidv4 } from 'uuid';
 import { remote } from 'electron';
-import { makeObservable, observable, computed, action, makeAutoObservable } from 'mobx';
+import { makeObservable, observable, computed, action, makeAutoObservable, flow } from 'mobx';
 
 const { dialog, getCurrentWindow } = remote;
 
@@ -18,6 +19,40 @@ class Project {
 
   // Shader maps
   maps = [];
+
+  id = uuidv4();
+
+  constructor() {
+    makeObservable( this, {
+      directory: observable,
+      name: observable,
+      images: observable,
+      maps: observable,
+
+      setName: action,
+      setDirectory: action,
+
+      // create: action,
+      // open: action,
+      save: action
+      // delete: action,
+      // close: action,
+      // openFromFile: action,
+      // loadProjectsFromMemory: action,
+      // updateListedProjects: action,
+
+      // setOpenedProjects: action,
+      // setTargetProject: action
+    } );
+  }
+
+  setName( name ) {
+    this.name = name;
+  }
+
+  setDirectory( directory ) {
+    this.directory = directory;
+  }
 
   toJSON() {
     return {
@@ -38,6 +73,17 @@ class Project {
 
   get file() {
     return path.join( this.directory, `${ this.name }.easytexture` );
+  }
+
+  get descriptor() {
+    return {
+      name: this.name,
+      directory: this.directory
+    };
+  }
+
+  equals( project ) {
+    return ( project.name === this.name && project.directory === this.directory );
   }
 
   save = async () => {

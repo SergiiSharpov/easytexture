@@ -29,8 +29,14 @@ const template = [
     label: 'File',
     submenu: [
       {
+        label: 'Create',
+        accelerator: 'Ctrl+N',
+        click: env.create
+      },
+      {
         label: 'Open',
-        click: async () => {}
+        accelerator: 'Ctrl+O',
+        click: env.openFromFile
       },
       {
         label: 'Save',

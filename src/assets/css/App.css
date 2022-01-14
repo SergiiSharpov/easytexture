@@ -48,6 +48,45 @@ body {
   /* display: block; */
 }
 
+.projects-view {
+  display: grid;
+  grid-template-rows: 38px auto;
+  height: 100vh;
+}
+
+.projects-view__tabs {
+  background: #000;
+  width: 100vw;
+
+  position: relative;
+  overflow: hidden;
+  overflow-x: scroll;
+}
+
+.projects-view__tabs > div {
+  height: 100%;
+  display: inline-block;
+  overflow: visible;
+  position: relative;
+ }
+
+.projects-view__tabs::-webkit-scrollbar {
+  height: 2px;
+}
+
+.projects-view__tabs::-webkit-scrollbar-thumb {
+  background-color: #2196f3;
+}
+
+.projects-view__views {
+  box-sizing: border-box;
+  border-top: 1px solid #343434;
+}
+
+.project {
+  height: 100%;
+}
+
 .empty-project-container {
   font-size: 24px;
   width: 100%;
@@ -95,7 +134,7 @@ body {
 
 .workflow-container {
   flex-direction: column;
-  height: 100vh;
+  height: 100%;
 }
 
 .main-container {
@@ -111,6 +150,7 @@ body {
 
 .menu-container {
   border-right: 1px solid #343434;
+  background: #121212;
 }
 
 .texture-preview-container {
@@ -567,6 +607,146 @@ body {
   /* background: #2196f3; */
   color: #eee;
   width: 100%;
+}
+
+
+
+
+
+.chrome-tab {
+  position: absolute;
+  bottom: -2px;
+  height: 34px;
+
+  z-index: 2;
+}
+
+.chrome-tab:not(.active) {
+  /* transition: 0.3s; */
+}
+
+.chrome-tab:hover {
+  z-index: 3;
+}
+
+.chrome-tab.active {
+  z-index: 5;
+}
+
+.chrome-tab-dividers {
+  position: absolute;
+  width: 100%;
+}
+
+/*
+.chrome-tab-dividers:before {
+  content: '';
+  position: absolute;
+
+  height: 18px;
+  width: 1px;
+  left: 9px;
+  top: 8px;
+  
+  z-index: 10;
+  background: #343434;
+}
+*/
+
+.chrome-tab-dividers:after {
+  content: '';
+  position: absolute;
+
+  height: 18px;
+  width: 1px;
+  right: 10px;
+  top: 8px;
+  
+  /* z-index: 10; */
+  background: #343434;
+}
+
+.chrome-tab-background {
+  position: absolute;
+  /* fill: #343434; */
+  /* fill: none;
+  stroke: none; */
+
+  /* fill: #121212; */
+
+  height: 100%;
+}
+
+.chrome-tab .chrome-tab-background svg {
+  fill: none;
+  stroke: none;
+  /* stroke: #343434; */
+}
+
+.chrome-tab:not(.active):hover .chrome-tab-background svg{
+  fill: #343434;
+}
+
+.chrome-tab.active .chrome-tab-background svg {
+  fill: #121212;
+  stroke: #2196f3;
+  /* stroke: #343434; */
+}
+
+.chrome-tab-background svg {
+  width: 100%;
+  height: 100%;
+}
+
+.chrome-tab-content {
+  position: absolute;
+  height: 100%;
+  width: 100%;
+
+  padding: 0 10px;
+  
+  display: flex;
+  align-items: center;
+
+  user-select: none;
+}
+
+.chrome-tab-close {
+  width: 16px;
+  height: 16px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-right: 6px;
+}
+
+.chrome-tab-close svg {
+  width: 14px;
+  height: 14px;
+}
+
+.chrome-tab-title {
+  margin-left: 8px;
+  padding-right: 8px;
+
+  font-weight: 100;
+  font-size: 14px;
+  
+  width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.chrome-tab .chrome-tab-drag-handle {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  left: 0;
+  border-top-left-radius: 8px;
+  border-top-right-radius: 8px;
+
+  touch-action: none;
 }
 
 
